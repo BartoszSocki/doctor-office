@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
 import java.util.Collection;
@@ -32,13 +33,15 @@ public class UserAuth implements UserDetails {
     @JsonIgnore
     private String encodedPassword;
 
-//    @Column(name = "role")
-//    @JsonIgnore
-//    private String role;
+    @Column(name = "role")
+    @JsonIgnore
+    private String role;
+
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of((GrantedAuthority) Roles.USER::value);
+        // TODO check it
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override
