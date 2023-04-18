@@ -1,6 +1,6 @@
 package com.example.springauthapi.entities;
 
-import com.example.springauthapi.authorities.Roles;
+import com.example.springauthapi.roles.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

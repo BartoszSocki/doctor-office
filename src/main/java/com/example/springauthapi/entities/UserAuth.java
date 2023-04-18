@@ -1,6 +1,6 @@
 package com.example.springauthapi.entities;
 
-import com.example.springauthapi.authorities.Roles;
+import com.example.springauthapi.roles.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;

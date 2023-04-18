@@ -1,4 +1,4 @@
-package com.example.springauthapi.authorities;
+package com.example.springauthapi.roles;
 
 public enum Roles {
     USER("USER"), ADMIN("ADMIN");

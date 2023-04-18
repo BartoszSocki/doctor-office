@@ -1,6 +1,6 @@
 package com.example.springauthapi.config;
 
-import com.example.springauthapi.authorities.Roles;
+import com.example.springauthapi.roles.Roles;
 import com.example.springauthapi.exceptions.handlers.CustomAccessDeniedHandler;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -17,6 +17,7 @@ import org.springframework.security.config.annotation.web.configurers.oauth2.ser
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.jwt.*;
@@ -34,26 +35,6 @@ import java.util.UUID;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfiguration {
-
-//    @Bean
-//    public SecurityFilterChain basicSecurity(HttpSecurity http) throws Exception {
-//        http.csrf().disable();
-//        http.authorizeHttpRequests(a -> a
-//            .requestMatchers("/api/auth/authentication").authenticated()
-//            .requestMatchers("/api/auth/register").permitAll()
-//            .requestMatchers("/error").permitAll()
-//            .anyRequest().authenticated()
-//        );
-//        http.headers(h -> h.frameOptions().sameOrigin());
-//        http.httpBasic();
-//        http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
-//        http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-//        http.exceptionHandling(e -> {
-//            e.accessDeniedHandler(new CustomAccessDeniedHandler());
-//        });
-//
-//        return http.build();
-//    }
 
     @Bean
     @Order(Ordered.HIGHEST_PRECEDENCE)
@@ -85,7 +66,6 @@ public class SecurityConfiguration {
         http.oauth2ResourceServer(a -> {
             a.jwt();
             a.accessDeniedHandler(new CustomAccessDeniedHandler());
-//            a.authenticationEntryPoint(new CustomAuthenticationEntryPoint());
         });
 
         return http.build();
@@ -149,22 +129,6 @@ public class SecurityConfiguration {
         return (jwkSelector, securityContext) -> jwkSelector.select(set);
     }
 
-//    @Bean
-//    public DataSource dataSource() {
-//        var builder = DataSourceBuilder.create();
-//        builder.driverClassName("org.h2.Driver");
-//        builder.url("jdbc:h2:mem:testdb");
-//        builder.username("sa");
-//        builder.password("");
-//        return builder.build();
-//    }
-//
-//    @Bean
-//    public UserDetailsService userDetailsService(DataSource dataSource) {
-//        UserDetailsManager manager = new JdbcUserDetailsManager(dataSource);
-//        return manager;
-//    }
-
     @Bean
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         var user1 = User.withUsername("bartosz")
@@ -172,7 +136,12 @@ public class SecurityConfiguration {
                 .authorities(Roles.USER.value())
                 .build();
 
-        return new InMemoryUserDetailsManager(user1);
+        var user2 = User.withUsername("seba")
+                .password(passwordEncoder.encode("password"))
+                .authorities(Roles.ADMIN.value())
+                .build();
+
+        return new InMemoryUserDetailsManager(user1, user2);
     }
 
 }

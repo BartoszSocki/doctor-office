@@ -19,14 +19,14 @@ public class JwtService {
 
     public String issueTokenFor(Authentication authentication) {
         var username = authentication.getName();
-        var authorities = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
+        var role = authentication.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
 
         var iss = Instant.now();
         var exp = iss.plusSeconds(60 * 60);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .claim("username", username)
-                .claim("role", authorities)
+                .claim("role", role)
                 .claim("iss", "self")
                 .claim("iat", iss.getEpochSecond())
                 .claim("exp", exp.getEpochSecond())
