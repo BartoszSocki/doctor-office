@@ -1,13 +1,11 @@
 package com.example.springauthapi.entities;
 
-import com.example.springauthapi.authorities.UserAuthorities;
+import com.example.springauthapi.authorities.Roles;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
-
-import java.util.Collection;
 
 @Entity
 @Getter
@@ -21,7 +19,7 @@ public class Authority {
     private Long id;
 
     @Enumerated
-    private UserAuthorities authority;
+    private Roles authority;
 
 //    @ManyToMany
 //    private Collection<User> users;

@@ -1,8 +1,7 @@
 package com.example.springauthapi.config;
 
-import com.example.springauthapi.authorities.UserAuthorities;
+import com.example.springauthapi.authorities.Roles;
 import com.example.springauthapi.exceptions.handlers.CustomAccessDeniedHandler;
-import com.example.springauthapi.exceptions.handlers.CustomAuthenticationEntryPoint;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -76,6 +75,8 @@ public class SecurityConfiguration {
     public SecurityFilterChain basicSecurity1(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeHttpRequests(a -> {
+            a.requestMatchers("/api/user/**").hasAnyRole(Roles.ADMIN.value(), Roles.USER.value());
+            a.requestMatchers("/api/admin/**").hasRole(Roles.ADMIN.value());
             a.anyRequest().authenticated();
         });
         http.headers(h -> h.frameOptions().sameOrigin());
@@ -114,8 +115,8 @@ public class SecurityConfiguration {
     @Bean
     public JwtAuthenticationConverter jwtAuthenticationConverter() {
         JwtGrantedAuthoritiesConverter jwtGrantedAuthoritiesConverter = new JwtGrantedAuthoritiesConverter();
-        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("");
-        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("authorities");
+        jwtGrantedAuthoritiesConverter.setAuthorityPrefix("ROLE_");
+        jwtGrantedAuthoritiesConverter.setAuthoritiesClaimName("role");
 
         JwtAuthenticationConverter jwtAuthenticationConverter = new JwtAuthenticationConverter();
         jwtAuthenticationConverter.setJwtGrantedAuthoritiesConverter(jwtGrantedAuthoritiesConverter);
@@ -168,7 +169,7 @@ public class SecurityConfiguration {
     public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
         var user1 = User.withUsername("bartosz")
                 .password(passwordEncoder.encode("password"))
-                .authorities(UserAuthorities.READ.toString())
+                .authorities(Roles.USER.value())
                 .build();
 
         return new InMemoryUserDetailsManager(user1);

@@ -1,16 +1,15 @@
 package com.example.springauthapi.authorities;
 
-public enum UserAuthorities {
-    READ("READ"), WRITE("WRITE");
+public enum Roles {
+    USER("USER"), ADMIN("ADMIN");
 
     private final String label;
 
-    UserAuthorities(String label) {
+    Roles(String label) {
         this.label = label;
     }
 
-    @Override
-    public String toString() {
+    public String value() {
         return label;
     }
 }

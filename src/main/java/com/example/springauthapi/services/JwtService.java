@@ -26,7 +26,7 @@ public class JwtService {
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .claim("username", username)
-                .claim("authorities", authorities)
+                .claim("role", authorities)
                 .claim("iss", "self")
                 .claim("iat", iss.getEpochSecond())
                 .claim("exp", exp.getEpochSecond())

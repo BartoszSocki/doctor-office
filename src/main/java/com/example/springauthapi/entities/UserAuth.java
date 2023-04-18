@@ -1,7 +1,6 @@
 package com.example.springauthapi.entities;
 
-import com.example.springauthapi.authorities.UserAuthorities;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.example.springauthapi.authorities.Roles;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,7 +38,7 @@ public class UserAuth implements UserDetails {
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of((GrantedAuthority) UserAuthorities.READ::toString);
+        return List.of((GrantedAuthority) Roles.USER::value);
     }
 
     @Override
