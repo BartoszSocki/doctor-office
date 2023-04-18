@@ -6,7 +6,9 @@ import com.example.springauthapi.model.dto.UserRegisterDataDto;
 import com.example.springauthapi.repositories.UserAuthRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.provisioning.UserDetailsManager;
 import org.springframework.stereotype.Service;
 
 @Service

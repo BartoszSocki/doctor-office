@@ -2,6 +2,7 @@ package com.example.springauthapi.config;
 
 import com.example.springauthapi.roles.Roles;
 import com.example.springauthapi.exceptions.handlers.CustomAccessDeniedHandler;
+import com.example.springauthapi.services.UserAuthDetailsService;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -24,8 +25,10 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
+import org.springframework.security.provisioning.JdbcUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import java.security.AuthProvider;
 import java.security.KeyPair;
 import java.security.KeyPairGenerator;
 import java.security.interfaces.RSAPublicKey;
@@ -127,21 +130,6 @@ public class SecurityConfiguration {
         var set = new JWKSet(key);
 
         return (jwkSelector, securityContext) -> jwkSelector.select(set);
-    }
-
-    @Bean
-    public UserDetailsService userDetailsService(PasswordEncoder passwordEncoder) {
-        var user1 = User.withUsername("bartosz")
-                .password(passwordEncoder.encode("password"))
-                .authorities(Roles.USER.value())
-                .build();
-
-        var user2 = User.withUsername("seba")
-                .password(passwordEncoder.encode("password"))
-                .authorities(Roles.ADMIN.value())
-                .build();
-
-        return new InMemoryUserDetailsManager(user1, user2);
     }
 
 }
