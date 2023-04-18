@@ -4,6 +4,7 @@ import com.example.springauthapi.entities.UserAuth;
 import com.example.springauthapi.exceptions.UserAlreadyRegisteredException;
 import com.example.springauthapi.model.dto.UserRegisterDataDto;
 import com.example.springauthapi.repositories.UserAuthRepository;
+import com.example.springauthapi.roles.Roles;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -29,6 +30,7 @@ public class UserRegistrationService {
         var userAuth = new UserAuth();
         userAuth.setUsername(username);
         userAuth.setEncodedPassword(encodedPassword);
+        userAuth.setRole(Roles.USER.value());
 
         userAuthRepository.save(userAuth);
     }

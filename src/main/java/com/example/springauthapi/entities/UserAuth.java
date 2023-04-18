@@ -23,7 +23,7 @@ import java.util.List;
 public class UserAuth implements UserDetails {
 
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "username")

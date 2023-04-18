@@ -1,5 +1,5 @@
 create table users_auth(
-   id int not null,
+   id identity not null,
    username varchar(255) not null,
    encoded_password varchar(255) not null,
    role varchar(16) not null,
