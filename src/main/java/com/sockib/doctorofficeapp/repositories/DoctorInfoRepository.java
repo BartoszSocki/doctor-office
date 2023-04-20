@@ -1,13 +1,12 @@
 package com.sockib.doctorofficeapp.repositories;
 
-import com.sockib.doctorofficeapp.entities.DoctorPrivateInfo;
-import com.sockib.doctorofficeapp.entities.RegisteredUser;
+import com.sockib.doctorofficeapp.entities.DoctorInfo;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.Optional;
 
-public interface DoctorInfoRepository extends JpaRepository<DoctorPrivateInfo, Long> {
+public interface DoctorInfoRepository extends JpaRepository<DoctorInfo, Long> {
 
-    Optional<DoctorPrivateInfo> findDoctorInfoByRegisteredUser(RegisteredUser registeredUser);
+    Optional<DoctorInfo> findDoctorInfoByUsername(String username);
 
 }

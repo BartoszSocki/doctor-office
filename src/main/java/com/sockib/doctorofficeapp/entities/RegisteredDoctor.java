@@ -1,6 +1,7 @@
 package com.sockib.doctorofficeapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.sockib.doctorofficeapp.roles.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -14,36 +15,31 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "registered_users")
+@Table(name = "registered_doctors")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisteredUser implements UserDetails {
+public class RegisteredDoctor implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "username")
+    @Column(name = "email")
     private String username;
 
-    @Column(name = "password")
     @JsonIgnore
+    @Column(name = "password")
     private String password;
 
-    @Column(name = "role")
     @JsonIgnore
-    private String role;
+    @OneToOne(mappedBy = "registeredDoctor")
+    private DoctorInfo doctorInfo;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(role));
-    }
-
-    @Override
-    public String getPassword() {
-        return password;
+        return List.of(new SimpleGrantedAuthority(Role.DOCTOR.value()));
     }
 
     @JsonIgnore

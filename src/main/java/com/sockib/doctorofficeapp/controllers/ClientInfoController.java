@@ -1,9 +1,7 @@
 package com.sockib.doctorofficeapp.controllers;
 
 import com.sockib.doctorofficeapp.entities.ClientInfo;
-import com.sockib.doctorofficeapp.entities.DoctorInfo;
 import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
-import com.sockib.doctorofficeapp.repositories.DoctorInfoRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
@@ -14,18 +12,19 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping(path = "/api/doctor")
+@RequestMapping(path = "/api/client")
 @AllArgsConstructor
-public class DoctorInfoController {
+public class ClientInfoController {
 
-    private DoctorInfoRepository doctorInfoRepository;
+    private ClientInfoRepository clientInfoRepository;
 
     @GetMapping(path = "/info")
-    public ResponseEntity<DoctorInfo> doctor(Principal principal) {
+    public ResponseEntity<ClientInfo> client(Principal principal) {
         var username = principal.getName();
-        var doctorInfo = doctorInfoRepository.findDoctorInfoByUsername(username)
+        var clientInfo = clientInfoRepository.findClientInfoByUsername(username)
                 .orElseThrow(() -> new UsernameNotFoundException(username));
 
-        return ResponseEntity.ok(doctorInfo);
+        return ResponseEntity.ok(clientInfo);
     }
+
 }
