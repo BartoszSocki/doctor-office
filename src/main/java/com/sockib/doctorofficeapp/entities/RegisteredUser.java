@@ -14,12 +14,12 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "users_auth")
+@Table(name = "registered_users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class UserAuth implements UserDetails {
+public class RegisteredUser implements UserDetails {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -28,24 +28,22 @@ public class UserAuth implements UserDetails {
     @Column(name = "username")
     private String username;
 
-    @Column(name = "encoded_password")
+    @Column(name = "password")
     @JsonIgnore
-    private String encodedPassword;
+    private String password;
 
     @Column(name = "role")
     @JsonIgnore
     private String role;
 
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        // TODO check it
         return List.of(new SimpleGrantedAuthority(role));
     }
 
     @Override
     public String getPassword() {
-        return encodedPassword;
+        return password;
     }
 
     @JsonIgnore

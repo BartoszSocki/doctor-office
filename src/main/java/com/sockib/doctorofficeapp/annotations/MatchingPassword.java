@@ -14,7 +14,7 @@ import java.lang.annotation.Target;
 @Retention(RetentionPolicy.RUNTIME)
 public @interface MatchingPassword {
     String message() default "passwords are not the same";
-    String originalPasswordField();
+    String passwordField();
     String matchingPasswordField();
     Class<?>[] groups() default {};
     Class<? extends Payload>[] payload() default {};

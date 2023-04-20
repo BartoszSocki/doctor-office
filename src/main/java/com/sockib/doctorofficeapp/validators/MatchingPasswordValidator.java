@@ -12,7 +12,7 @@ public class MatchingPasswordValidator implements ConstraintValidator<MatchingPa
 
     public void initialize(MatchingPassword matchingPassword) {
         this.matchingPasswordField = matchingPassword.matchingPasswordField();
-        this.originalPasswordField = matchingPassword.originalPasswordField();
+        this.originalPasswordField = matchingPassword.passwordField();
     }
 
     @Override

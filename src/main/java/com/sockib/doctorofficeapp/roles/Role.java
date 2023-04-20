@@ -1,11 +1,11 @@
 package com.sockib.doctorofficeapp.roles;
 
-public enum Roles {
-    USER("USER"), ADMIN("ADMIN");
+public enum Role {
+    CLIENT("CLIENT"), DOCTOR("DOCTOR");
 
     private final String label;
 
-    Roles(String label) {
+    Role(String label) {
         this.label = label;
     }
 

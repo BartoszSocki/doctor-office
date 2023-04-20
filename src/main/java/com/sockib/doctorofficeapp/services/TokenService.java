@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
-public class JwtService {
+public class TokenService {
 
     private JwtEncoder jwtEncoder;
 
@@ -25,7 +25,7 @@ public class JwtService {
         var exp = iss.plusSeconds(60 * 60);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
-                .claim("username", username)
+                .claim("sub", username)
                 .claim("role", role)
                 .claim("iss", "self")
                 .claim("iat", iss.getEpochSecond())

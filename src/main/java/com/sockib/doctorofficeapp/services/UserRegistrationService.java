@@ -1,10 +1,10 @@
 package com.sockib.doctorofficeapp.services;
 
-import com.sockib.doctorofficeapp.entities.UserAuth;
+import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import com.sockib.doctorofficeapp.exceptions.UserAlreadyRegisteredException;
-import com.sockib.doctorofficeapp.model.dto.UserRegisterDataDto;
-import com.sockib.doctorofficeapp.repositories.UserAuthRepository;
-import com.sockib.doctorofficeapp.roles.Roles;
+import com.sockib.doctorofficeapp.model.dto.UserCredentialsDto;
+import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
+import com.sockib.doctorofficeapp.roles.Role;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -14,21 +14,21 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class UserRegistrationService {
 
-    private UserAuthRepository userAuthRepository;
+    private RegisteredUserRepository userAuthRepository;
     private PasswordEncoder passwordEncoder;
 
     @Transactional
-    public void registerUser(UserRegisterDataDto userData) {
+    public void registerUser(UserCredentialsDto userData) {
         var user = userAuthRepository.findUserAuthByUsername(userData.getUsername());
         user.ifPresent(u -> { throw new UserAlreadyRegisteredException(u.getUsername());});
 
         var encodedPassword = passwordEncoder.encode(userData.getPassword());
         var username = userData.getUsername();
 
-        var userAuth = new UserAuth();
+        var userAuth = new RegisteredUser();
         userAuth.setUsername(username);
-        userAuth.setEncodedPassword(encodedPassword);
-        userAuth.setRole(Roles.USER.value());
+        userAuth.setPassword(encodedPassword);
+        userAuth.setRole(Role.CLIENT.value());
 
         userAuthRepository.save(userAuth);
     }

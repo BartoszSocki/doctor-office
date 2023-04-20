@@ -12,8 +12,8 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-@MatchingPassword(originalPasswordField = "password", matchingPasswordField = "passwordRepeated")
-public class UserRegisterDataDto {
+@MatchingPassword(passwordField = "password", matchingPasswordField = "passwordRepeated")
+public class UserCredentialsDto {
 
     @NotBlank
     private String username;
@@ -23,6 +23,6 @@ public class UserRegisterDataDto {
     private String password;
 
     @NotBlank
-    private String passwordRepeated;
+    private String matchingPassword;
 
 }

@@ -1,6 +1,6 @@
 package com.sockib.doctorofficeapp.config;
 
-import com.sockib.doctorofficeapp.roles.Roles;
+import com.sockib.doctorofficeapp.roles.Role;
 import com.sockib.doctorofficeapp.exceptions.handlers.CustomAccessDeniedHandler;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
@@ -36,10 +36,9 @@ public class SecurityConfiguration {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain basicSecurity0(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.securityMatcher("/api/auth/**", "/error");
+        http.securityMatcher("/token", "/error");
         http.authorizeHttpRequests(a -> {
-            a.requestMatchers("/api/auth/authentication").permitAll();
-            a.requestMatchers("/api/auth/register").permitAll();
+            a.requestMatchers("/token").permitAll();
             a.requestMatchers("/error").permitAll();
         });
         http.httpBasic();
@@ -52,17 +51,15 @@ public class SecurityConfiguration {
     public SecurityFilterChain basicSecurity1(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeHttpRequests(a -> {
-            a.requestMatchers("/api/user/**").hasAnyRole(Roles.ADMIN.value(), Roles.USER.value());
-            a.requestMatchers("/api/admin/**").hasRole(Roles.ADMIN.value());
+            a.requestMatchers("/api/client/register").permitAll();
+            a.requestMatchers("/api/doctor/register").permitAll();
+            a.requestMatchers("/api/client/**").hasRole(Role.CLIENT.value());
+            a.requestMatchers("/api/doctor/**").hasRole(Role.DOCTOR.value());
             a.anyRequest().authenticated();
         });
         http.headers(h -> h.frameOptions().sameOrigin());
         http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
         http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
-        http.oauth2ResourceServer(a -> {
-            a.jwt();
-            a.accessDeniedHandler(new CustomAccessDeniedHandler());
-        });
 
         return http.build();
     }

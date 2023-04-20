@@ -5,11 +5,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping(path = "/api/user")
-public class UserController {
+@RequestMapping(path = "/api/doctor")
+public class DoctorTestController {
 
-    @GetMapping
-    public String user() {
-        return "user";
+    @GetMapping(path = "/test")
+    public String doctor() {
+        return "doctor";
     }
+
 }
