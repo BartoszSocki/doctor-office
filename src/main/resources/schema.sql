@@ -48,9 +48,9 @@ create table scheduled_visits(
     fk_registered_doctor_id int not null,
 
     day_of_the_week varchar(20) not null,
-    beg time not null,
-    end time not null,
-    price int,
+    beg_time time not null,
+    end_time time not null,
+    price int null,
     localization varchar(60) not null,
     type varchar(60) not null,
 
@@ -64,8 +64,8 @@ create table planned_visits(
     fk_registered_client_id int not null,
     fk_scheduled_visit_id int not null,
 
-    day datetime not null,
-    cancelled bool default false,
+    visit_day datetime not null,
+    cancelled bit default false,
 
     primary key (pk_id),
     foreign key (fk_registered_doctor_id) references registered_doctors(id),

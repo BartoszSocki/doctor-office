@@ -3,21 +3,20 @@ package com.sockib.doctorofficeapp.entities;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.*;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-@Entity
-@Table(name = "scheduled_visits")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@ToString
+
+@Entity
+@Table(name = "scheduled_visits")
 public class ScheduledVisit {
 
     @Id
@@ -29,10 +28,10 @@ public class ScheduledVisit {
     @Enumerated(EnumType.STRING)
     private DayOfTheWeek dayOfTheWeek;
 
-    @Column(name = "beg")
+    @Column(name = "beg_time")
     private LocalTime visitBegTime;
 
-    @Column(name = "end")
+    @Column(name = "end_time")
     private LocalTime visitEndTime;
 
     private Integer price;

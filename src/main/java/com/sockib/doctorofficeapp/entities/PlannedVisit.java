@@ -10,7 +10,7 @@ import lombok.Setter;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "doctors_info")
+@Table(name = "planned_visits")
 @Getter
 @Setter
 @AllArgsConstructor
@@ -22,6 +22,7 @@ public class PlannedVisit {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    @Column(name = "visit_day")
     private LocalDateTime day;
     private boolean cancelled;
 
@@ -37,6 +38,6 @@ public class PlannedVisit {
 
     @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_visit_id", referencedColumnName = "pk_id")
+    @JoinColumn(name = "fk_scheduled_visit_id", referencedColumnName = "pk_id")
     private ScheduledVisit scheduledVisit;
 }
