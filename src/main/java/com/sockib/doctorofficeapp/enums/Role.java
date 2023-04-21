@@ -1,4 +1,4 @@
-package com.sockib.doctorofficeapp.roles;
+package com.sockib.doctorofficeapp.enums;
 
 public enum Role {
     CLIENT("CLIENT"), DOCTOR("DOCTOR");

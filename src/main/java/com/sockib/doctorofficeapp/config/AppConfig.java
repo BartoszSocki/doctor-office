@@ -1,6 +1,6 @@
 package com.sockib.doctorofficeapp.config;
 
-import com.sockib.doctorofficeapp.roles.Role;
+import com.sockib.doctorofficeapp.enums.Role;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;

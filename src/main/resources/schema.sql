@@ -42,3 +42,33 @@ create table clients_info(
     primary key (id),
     foreign key (registered_client_id) references registered_clients(id)
 );
+
+create table scheduled_visits(
+    pk_id identity not null,
+    fk_registered_doctor_id int not null,
+
+    day_of_the_week varchar(20) not null,
+    beg time not null,
+    end time not null,
+    price int,
+    localization varchar(60) not null,
+    type varchar(60) not null,
+
+    primary key (pk_id),
+    foreign key (fk_registered_doctor_id) references registered_doctors(id)
+);
+
+create table planned_visits(
+    pk_id identity not null,
+    fk_registered_doctor_id int not null,
+    fk_registered_client_id int not null,
+    fk_scheduled_visit_id int not null,
+
+    day datetime not null,
+    cancelled bool default false,
+
+    primary key (pk_id),
+    foreign key (fk_registered_doctor_id) references registered_doctors(id),
+    foreign key (fk_registered_client_id) references registered_clients(id),
+    foreign key (fk_scheduled_visit_id) references scheduled_visits(pk_id)
+);

@@ -5,7 +5,6 @@ import com.sockib.doctorofficeapp.exceptions.UserAlreadyRegisteredException;
 import com.sockib.doctorofficeapp.model.dto.ClientRegistrationDataDto;
 import com.sockib.doctorofficeapp.repositories.ClientCredentialsRepository;
 import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
-import com.sockib.doctorofficeapp.roles.Role;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;

@@ -1,7 +1,7 @@
 package com.sockib.doctorofficeapp.entities;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.sockib.doctorofficeapp.roles.Role;
+import com.sockib.doctorofficeapp.enums.Role;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

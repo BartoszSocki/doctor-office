@@ -1,7 +1,7 @@
 package com.sockib.doctorofficeapp.controllers;
 
 import com.sockib.doctorofficeapp.model.dto.UserLoginDataDto;
-import com.sockib.doctorofficeapp.roles.Role;
+import com.sockib.doctorofficeapp.enums.Role;
 import com.sockib.doctorofficeapp.services.TokenService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Qualifier;
