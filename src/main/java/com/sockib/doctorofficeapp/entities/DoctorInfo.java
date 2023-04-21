@@ -24,6 +24,7 @@ public class DoctorInfo {
     private String name;
     private String surname;
     private String specialization;
+    private String mobile;
 
     private String pesel;
     private String pwz;
