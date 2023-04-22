@@ -21,7 +21,7 @@ class PlannedVisitRepositoryUnitTest {
     PlannedVisitRepository plannedVisitRepository;
 
     @Test
-    void givenScheduledVisit_whenSave_thenReturnSavedScheduledVisit() {
+    void givenPlannedVisit_whenSave_thenReturnSavedPlannedVisit() {
         // given
         var registeredDoctor = new RegisteredDoctor();
         registeredDoctor.setUsername("bob");
