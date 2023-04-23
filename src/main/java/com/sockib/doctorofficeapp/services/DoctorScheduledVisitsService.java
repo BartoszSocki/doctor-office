@@ -6,13 +6,11 @@ import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.repositories.DoctorCredentialsRepository;
 import com.sockib.doctorofficeapp.repositories.ScheduledVisitRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestBody;
 
 import java.security.Principal;
+import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -21,9 +19,13 @@ public class DoctorScheduledVisitsService {
     private DoctorCredentialsRepository doctorCredentialsRepository;
     private ScheduledVisitRepository scheduledVisitRepository;
 
-    public ScheduledVisit getScheduledVisits(Long visitId) {
+    public ScheduledVisit getScheduledVisit(Long visitId) {
         return scheduledVisitRepository.findById(visitId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
+    }
+
+    public List<ScheduledVisit> getScheduledVisits(Long id) {
+        return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(id);
     }
 
     public void removeScheduledVisit(Long visitId) {
