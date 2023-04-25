@@ -4,7 +4,7 @@ import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.repositories.DoctorCredentialsRepository;
-import com.sockib.doctorofficeapp.repositories.ScheduledVisitRepository;
+import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -17,7 +17,7 @@ import java.util.List;
 public class ScheduledVisitsService {
 
     private DoctorCredentialsRepository doctorCredentialsRepository;
-    private ScheduledVisitRepository scheduledVisitRepository;
+    private ScheduledVisitsRepository scheduledVisitRepository;
 
     public ScheduledVisit getScheduledVisit(Long visitId) {
         return scheduledVisitRepository.findById(visitId)
