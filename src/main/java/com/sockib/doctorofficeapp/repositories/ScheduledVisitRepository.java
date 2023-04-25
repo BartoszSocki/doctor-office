@@ -4,13 +4,17 @@ import com.sockib.doctorofficeapp.entities.RegisteredDoctor;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 
+import java.util.List;
 import java.util.Optional;
 
 public interface ScheduledVisitRepository extends JpaRepository<ScheduledVisit, Long> {
 
-    Optional<ScheduledVisit> findScheduledVisitByDayOfTheWeekAndRegisteredDoctor(
-            DayOfTheWeek dayOfTheWeek, RegisteredDoctor registeredDoctor);
+    @Query("SELECT v FROM ScheduledVisit v WHERE v.registeredDoctor.id = :id and v.dayOfTheWeek = :dayOfTheWeek")
+    List<ScheduledVisit> findScheduledVisitsByDayOfTheWeekAndRegisteredDoctor(
+            DayOfTheWeek dayOfTheWeek, Long id);
 
-    Optional<ScheduledVisit> findScheduledVisitByType(String type);
+    @Query("SELECT v FROM ScheduledVisit v WHERE v.registeredDoctor.id = :id")
+    List<ScheduledVisit> findScheduledVisitsByRegisteredDoctorId(Long id);
 }

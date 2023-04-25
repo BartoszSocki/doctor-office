@@ -4,6 +4,7 @@ import com.sockib.doctorofficeapp.model.dto.ClientRegistrationDataDto;
 import com.sockib.doctorofficeapp.services.ClientRegistrationService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -16,6 +17,7 @@ public class ClientRegistrationController {
 
     private ClientRegistrationService clientRegistrationService;
 
+    @PreAuthorize("hasRole('CLIENT')")
     @PostMapping
     public void register(@Valid @RequestBody ClientRegistrationDataDto clientRegistrationDataDto) {
         clientRegistrationService.registerClient(clientRegistrationDataDto);
