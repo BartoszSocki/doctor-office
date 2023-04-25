@@ -14,7 +14,7 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class DoctorScheduledVisitsService {
+public class ScheduledVisitsService {
 
     private DoctorCredentialsRepository doctorCredentialsRepository;
     private ScheduledVisitRepository scheduledVisitRepository;

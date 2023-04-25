@@ -1,6 +1,5 @@
 package com.sockib.doctorofficeapp.config;
 
-import com.sockib.doctorofficeapp.enums.Role;
 import com.nimbusds.jose.JOSEException;
 import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
@@ -52,8 +51,7 @@ public class AppConfig {
         http.authorizeHttpRequests(a -> {
             a.requestMatchers("/api/client/register").permitAll();
             a.requestMatchers("/api/doctor/register").permitAll();
-            a.requestMatchers("/api/client/**").hasRole(Role.CLIENT.value());
-            a.requestMatchers("/api/doctor/**").hasRole(Role.DOCTOR.value());
+            a.requestMatchers("/api/**").authenticated();
             a.anyRequest().authenticated();
         });
         http.headers(h -> h.frameOptions().sameOrigin());

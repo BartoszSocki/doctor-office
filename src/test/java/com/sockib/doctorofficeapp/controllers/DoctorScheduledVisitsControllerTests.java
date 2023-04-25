@@ -76,7 +76,7 @@ class DoctorScheduledVisitsControllerTests {
         formData.setVisitBegTime(LocalTime.of(10, 0));
         formData.setVisitEndTime(LocalTime.of(11, 0));
         formData.setPrice(250);
-        formData.setLocalization("aaa");
+        formData.setLocalization("second");
         formData.setType("bbb");
 
         // when
@@ -99,7 +99,7 @@ class DoctorScheduledVisitsControllerTests {
         formData.setVisitBegTime(LocalTime.of(10, 0));
         formData.setVisitEndTime(LocalTime.of(11, 0));
         formData.setPrice(250);
-        formData.setLocalization("aaa");
+        formData.setLocalization("first");
         formData.setType("bbb");
 
         sendForm(formData);
@@ -121,13 +121,13 @@ class DoctorScheduledVisitsControllerTests {
                 .andReturn()
                 .getResponse();
 
-        var getResponse = mockMvc.perform(get("/api/doctor/10//scheduled-visits")
+        var getResponse = mockMvc.perform(get("/api/doctor/10//scheduled-visits/" + visitId)
                 .headers(headers))
                 .andReturn()
                 .getResponse();
 
         // then
-        Assertions.assertEquals("[]", getResponse.getContentAsString());
+        Assertions.assertEquals("", getResponse.getContentAsString());
         Assertions.assertEquals(HttpStatus.OK.value(), deleteResponse.getStatus());
     }
 
