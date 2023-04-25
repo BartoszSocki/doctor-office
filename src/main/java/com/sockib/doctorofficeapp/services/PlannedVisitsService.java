@@ -16,19 +16,21 @@ public class PlannedVisitsService {
     private PlannedVisitsRepository plannedVisitsRepository;
     private ClientCredentialsRepository clientCredentialsRepository;
 
-    public List<PlannedVisit> getClientPlannedVisits(Long clientId) {
-        return plannedVisitsRepository.findPlannedVisitsByClientId(clientId);
+    public List<PlannedVisit> getClientPlannedVisits(Principal principal) {
+        var registeredClient = clientCredentialsRepository.findRegisteredClientByUsername(principal.getName())
+                .orElseThrow(() -> new RuntimeException("TODO"));
+        return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId());
     }
 
     public List<PlannedVisit> getDoctorPlannedVisits(Long doctorId) {
         return plannedVisitsRepository.findPlannedVisitsByDoctorId(doctorId);
     }
 
-    public void signUpClientForPlannedVisit(Principal principal, Long visitId) {
+    public void signUpClientForPlannedVisit(String username, Long visitId) {
         var visit = plannedVisitsRepository.findById(visitId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
-        var registeredClient = clientCredentialsRepository.findRegisteredClientByUsername(principal.getName())
+        var registeredClient = clientCredentialsRepository.findRegisteredClientByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
         visit.setRegisteredClient(registeredClient);
