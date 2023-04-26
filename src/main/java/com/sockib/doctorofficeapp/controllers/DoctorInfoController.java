@@ -13,6 +13,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping(path = "/api/doctor/info")
 @AllArgsConstructor
@@ -27,6 +30,9 @@ public class DoctorInfoController {
         var doctorInfo = doctorInfoService.getDoctorInfo(principal.getName());
         var doctorInfoDto = modelMapper.map(doctorInfo, DoctorPrivateInfoDto.class);
 
+        doctorInfoDto.add(linkTo(methodOn(DoctorInfoController.class).privateDoctorInfo(principal)).withSelfRel());
+        doctorInfoDto.add(linkTo(methodOn(DoctorInfoController.class).publicDoctorInfo(principal)).withRel("publicDoctorInfo"));
+
         return ResponseEntity.ok(doctorInfoDto);
     }
 
@@ -34,6 +40,9 @@ public class DoctorInfoController {
     public ResponseEntity<DoctorPublicInfoDto> publicDoctorInfo(Principal principal) {
         var doctorInfo = doctorInfoService.getDoctorInfo(principal.getName());
         var doctorInfoDto = modelMapper.map(doctorInfo, DoctorPublicInfoDto.class);
+
+        doctorInfoDto.add(linkTo(methodOn(DoctorInfoController.class).privateDoctorInfo(principal)).withSelfRel());
+        doctorInfoDto.add(linkTo(methodOn(DoctorInfoController.class).publicDoctorInfo(principal)).withRel("publicDoctorInfo"));
 
         return ResponseEntity.ok(doctorInfoDto);
     }

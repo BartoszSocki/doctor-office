@@ -17,7 +17,6 @@ import java.util.List;
 public class PlannedVisitsController {
 
     private PlannedVisitsService plannedVisitsService;
-//    private TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitDtoTypeMap;
     private ModelMapper modelMapper;
 
     @PreAuthorize("hasRole('CLIENT')")
