@@ -1,15 +1,21 @@
 package com.sockib.doctorofficeapp.controllers;
 
+import com.sockib.doctorofficeapp.entities.PlannedVisit;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
+import com.sockib.doctorofficeapp.model.dto.PlannedVisitDto;
+import com.sockib.doctorofficeapp.model.dto.ScheduledVisitDto;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.services.ScheduledVisitsService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @AllArgsConstructor
 
@@ -18,12 +24,19 @@ import java.util.List;
 public class ScheduledVisitsController {
 
     private ScheduledVisitsService scheduledVisitsService;
+    private ModelMapper modelMapper;
 
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping(path = "/scheduled-visits/{visitId}")
-    public ResponseEntity<ScheduledVisit> getVisit(@PathVariable Long visitId) {
+    public ResponseEntity<ScheduledVisitDto> getVisit(@PathVariable Long visitId) {
         var scheduledVisit = scheduledVisitsService.getScheduledVisit(visitId);
-        return ResponseEntity.ok(scheduledVisit);
+
+        TypeMap<ScheduledVisit, ScheduledVisitDto> scheduledVisitMapper = modelMapper.createTypeMap(ScheduledVisit.class, ScheduledVisitDto.class);
+        scheduledVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredDoctor().getId(), ScheduledVisitDto::setRegisteredDoctorId));
+
+        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class);
+
+        return ResponseEntity.ok(scheduledVisitDto);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
@@ -45,9 +58,16 @@ public class ScheduledVisitsController {
     }
 
     @GetMapping(path = "/{doctorId}/scheduled-visits")
-    public ResponseEntity<List<ScheduledVisit>> getAllVisits(@PathVariable Long doctorId) {
-        var visits = scheduledVisitsService.getScheduledVisits(doctorId);
-        return ResponseEntity.ok(visits);
+    public ResponseEntity<List<ScheduledVisitDto>> getAllVisits(@PathVariable Long doctorId) {
+        var scheduledVisits = scheduledVisitsService.getScheduledVisits(doctorId);
+
+        TypeMap<ScheduledVisit, ScheduledVisitDto> scheduledVisitMapper = modelMapper.createTypeMap(ScheduledVisit.class, ScheduledVisitDto.class);
+        scheduledVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredDoctor().getId(), ScheduledVisitDto::setRegisteredDoctorId));
+
+        var scheduledVisitsDto = scheduledVisits.stream()
+                .map(v -> modelMapper.map(v, ScheduledVisitDto.class))
+                .toList();
+        return ResponseEntity.ok(scheduledVisitsDto);
     }
 
 }

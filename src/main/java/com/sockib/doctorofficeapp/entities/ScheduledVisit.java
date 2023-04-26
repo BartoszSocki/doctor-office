@@ -38,7 +38,6 @@ public class ScheduledVisit {
     private String localization;
     private String type;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "id")
     private RegisteredDoctor registeredDoctor;
