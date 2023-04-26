@@ -19,8 +19,7 @@ public interface PlannedVisitsRepository extends JpaRepository<PlannedVisit, Lon
     @Query("SELECT v FROM PlannedVisit v WHERE v.registeredDoctor.id = :doctorId")
     List<PlannedVisit> findPlannedVisitsByDoctorId(Long doctorId);
 
-//    @Modifying
-//    @Query("UPDATE PlannedVisit v SET v.registeredClient = :registeredClient WHERE v.id = :visitId")
-//    void updateRegisteredClient(RegisteredClient registeredClient, Long visitId);
+    @Query("SELECT v FROM PlannedVisit v WHERE v.registeredDoctor.username = :username")
+    List<PlannedVisit> findPlannedVisitsByDoctorUsername(String doctorId);
 
 }

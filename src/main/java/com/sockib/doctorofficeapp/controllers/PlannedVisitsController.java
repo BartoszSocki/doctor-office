@@ -7,6 +7,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.time.LocalDate;
 import java.util.List;
 
 @RestController
@@ -22,15 +23,18 @@ public class PlannedVisitsController {
         return plannedVisitsService.getClientPlannedVisits(principal);
     }
 
-    @GetMapping(path = "/doctor/{doctorId}/planned-visits")
-    public List<PlannedVisit> getDoctorPlannedVisits(@PathVariable Long doctorId) {
-        return plannedVisitsService.getDoctorPlannedVisits(doctorId);
+    @PreAuthorize("hasRole('DOCTOR')")
+    @GetMapping(path = "/doctor/planned-visits")
+    public List<PlannedVisit> getDoctorPlannedVisits(Principal principal) {
+        return plannedVisitsService.getDoctorPlannedVisits(principal.getName());
     }
 
     @PreAuthorize("hasRole('CLIENT')")
-    @PostMapping(path = "/doctor/planned-visits/{visitId}")
-    public void signUpForPlannedVisit(Principal principal, @PathVariable Long visitId) {
-        plannedVisitsService.signUpClientForPlannedVisit(principal.getName(), visitId);
+    @PostMapping(path = "/client/planned-visits")
+    public void requestPlannedVisit(Principal principal,
+                                    @RequestParam(name = "id") Long scheduledVisitId,
+                                    @RequestParam(name = "date")LocalDate date) {
+        plannedVisitsService.requestPlannedVisit(principal.getName(), scheduledVisitId, date);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
