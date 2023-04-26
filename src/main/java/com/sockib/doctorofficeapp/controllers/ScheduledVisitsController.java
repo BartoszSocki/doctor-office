@@ -59,6 +59,7 @@ public class ScheduledVisitsController {
         var scheduledVisitsDto = scheduledVisits.stream()
                 .map(v -> modelMapper.map(v, ScheduledVisitDto.class))
                 .toList();
+
         return ResponseEntity.ok(scheduledVisitsDto);
     }
 

@@ -1,19 +1,15 @@
 package com.sockib.doctorofficeapp.controllers;
 
-import com.sockib.doctorofficeapp.entities.PlannedVisit;
 import com.sockib.doctorofficeapp.model.dto.PlannedVisitDto;
 import com.sockib.doctorofficeapp.services.PlannedVisitsService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
-import org.modelmapper.TypeMap;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
-import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")

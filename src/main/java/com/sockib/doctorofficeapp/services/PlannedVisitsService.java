@@ -23,12 +23,14 @@ public class PlannedVisitsService {
     private ClientCredentialsRepository clientCredentialsRepository;
     private DoctorCredentialsRepository doctorCredentialsRepository;
 
+    // TODO error when username not found?
     public List<PlannedVisit> getClientPlannedVisits(String username) {
         var registeredClient = clientCredentialsRepository.findRegisteredClientByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
         return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId());
     }
 
+    // TODO no error when username not found?
     public List<PlannedVisit> getDoctorPlannedVisits(String username) {
         return plannedVisitsRepository.findPlannedVisitsByDoctorUsername(username);
     }
