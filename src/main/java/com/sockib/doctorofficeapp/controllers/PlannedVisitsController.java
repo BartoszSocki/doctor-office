@@ -1,14 +1,18 @@
 package com.sockib.doctorofficeapp.controllers;
 
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
+import com.sockib.doctorofficeapp.model.dto.PlannedVisitDto;
 import com.sockib.doctorofficeapp.services.PlannedVisitsService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
+import org.modelmapper.TypeMap;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @RestController
 @RequestMapping(path = "/api")
@@ -16,11 +20,21 @@ import java.util.List;
 public class PlannedVisitsController {
 
     private PlannedVisitsService plannedVisitsService;
+    private ModelMapper modelMapper;
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/client/planned-visits")
-    public List<PlannedVisit> getClientPlannedVisits(Principal principal) {
-        return plannedVisitsService.getClientPlannedVisits(principal);
+    public List<PlannedVisitDto> getClientPlannedVisits(Principal principal) {
+        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal);
+
+        TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitMapper = modelMapper.createTypeMap(PlannedVisit.class, PlannedVisitDto.class);
+        plannedVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredClient().getId(), PlannedVisitDto::setRegisteredClientId));
+        plannedVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredDoctor().getId(), PlannedVisitDto::setRegisteredDoctorId));
+        plannedVisitMapper.addMappings(mapper -> mapper.map(src -> src.getScheduledVisit().getId(), PlannedVisitDto::setScheduledVisitId));
+
+        return plannedVisits.stream()
+                .map(v -> modelMapper.map(v, PlannedVisitDto.class))
+                .toList();
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
