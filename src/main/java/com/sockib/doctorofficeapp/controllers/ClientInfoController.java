@@ -1,8 +1,9 @@
 package com.sockib.doctorofficeapp.controllers;
 
-import com.sockib.doctorofficeapp.entities.ClientInfo;
-import com.sockib.doctorofficeapp.model.dto.ClientInfoDto;
+import com.sockib.doctorofficeapp.model.dto.ClientPrivateInfoDto;
+import com.sockib.doctorofficeapp.model.dto.ClientPublicInfoDto;
 import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
+import com.sockib.doctorofficeapp.services.ClientInfoService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
@@ -15,21 +16,26 @@ import org.springframework.web.bind.annotation.RestController;
 import java.security.Principal;
 
 @RestController
-@RequestMapping(path = "/api/client")
+@RequestMapping(path = "/api/client/info")
 @AllArgsConstructor
 public class ClientInfoController {
 
-    private ClientInfoRepository clientInfoRepository;
+    private ClientInfoService clientInfoService;
     private ModelMapper modelMapper;
 
     @PreAuthorize("hasRole('CLIENT')")
-    @GetMapping(path = "/info")
-    public ResponseEntity<ClientInfoDto> client(Principal principal) {
-        var username = principal.getName();
-        var clientInfo = clientInfoRepository.findClientInfoByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+    @GetMapping(path = "/private")
+    public ResponseEntity<ClientPrivateInfoDto> privateClientInfo(Principal principal) {
+        var clientInfo = clientInfoService.getClientInfo(principal.getName());
+        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class);
 
-        var clientInfoDto = modelMapper.map(clientInfo, ClientInfoDto.class);
+        return ResponseEntity.ok(clientInfoDto);
+    }
+
+    @GetMapping(path = "/public")
+    public ResponseEntity<ClientPublicInfoDto> publicClientInfo(Principal principal) {
+        var clientInfo = clientInfoService.getClientInfo(principal.getName());
+        var clientInfoDto = modelMapper.map(clientInfo, ClientPublicInfoDto.class);
 
         return ResponseEntity.ok(clientInfoDto);
     }
