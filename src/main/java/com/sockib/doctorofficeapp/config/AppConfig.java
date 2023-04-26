@@ -5,6 +5,7 @@ import com.nimbusds.jose.jwk.JWKSet;
 import com.nimbusds.jose.jwk.RSAKey;
 import com.nimbusds.jose.jwk.source.JWKSource;
 import com.nimbusds.jose.proc.SecurityContext;
+import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -22,12 +23,15 @@ import org.springframework.security.oauth2.server.resource.authentication.JwtGra
 import org.springframework.security.web.SecurityFilterChain;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 import java.security.*;
+import java.security.interfaces.RSAPrivateKey;
 import java.security.interfaces.RSAPublicKey;
 import java.security.spec.InvalidKeySpecException;
 import java.security.spec.PKCS8EncodedKeySpec;
+import java.security.spec.RSAPrivateKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Duration;
 import java.util.UUID;
@@ -108,15 +112,38 @@ public class AppConfig {
     @Bean
     public KeyPair keyPair() {
         try {
-            var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
-            var sr = new SecureRandom();
-            sr.setSeed(0L);
+            var rawPemPublicKey = new String(Files.readAllBytes(Paths.get(publicKeyPath)), Charset.defaultCharset());
+            var pemPublicKey = rawPemPublicKey
+                    .replace("-----BEGIN PUBLIC KEY-----", "")
+                    .replaceAll(System.lineSeparator(), "")
+                    .replace("-----END PUBLIC KEY-----", "");
 
-            keyPairGenerator.initialize(2048, sr);
-            return keyPairGenerator.generateKeyPair();
+            byte[] encoded = Base64.decodeBase64(pemPublicKey);
+            KeyFactory keyFactory = KeyFactory.getInstance("RSA");
+            X509EncodedKeySpec publicKeySpec = new X509EncodedKeySpec(encoded);
+            var publicKey = (RSAPublicKey) keyFactory.generatePublic(publicKeySpec);
+
+            var rawPemPrivateKey = new String(Files.readAllBytes(Paths.get(privateKeyPath)), Charset.defaultCharset());
+            var pemPrivateKey = rawPemPrivateKey
+                    .replace("-----BEGIN PRIVATE KEY-----", "")
+                    .replaceAll(System.lineSeparator(), "")
+                    .replace("-----END PRIVATE KEY-----", "");
+
+            encoded = Base64.decodeBase64(pemPrivateKey);
+            PKCS8EncodedKeySpec privateKeySpec = new PKCS8EncodedKeySpec(encoded);
+            var privateKey = (RSAPrivateKey) keyFactory.generatePrivate(privateKeySpec);
+
+            return new KeyPair(publicKey, privateKey);
         } catch (Exception ex) {
-            throw new RuntimeException(ex);
+            return null;
         }
+//        try {
+//            var keyPairGenerator = KeyPairGenerator.getInstance("RSA");
+//            keyPairGenerator.initialize(2048);
+//            return keyPairGenerator.generateKeyPair();
+//        } catch (Exception ex) {
+//            throw new RuntimeException(ex);
+//        }
     }
 
     @Bean
