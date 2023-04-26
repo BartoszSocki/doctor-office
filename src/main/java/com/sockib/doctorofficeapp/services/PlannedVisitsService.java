@@ -23,8 +23,8 @@ public class PlannedVisitsService {
     private ClientCredentialsRepository clientCredentialsRepository;
     private DoctorCredentialsRepository doctorCredentialsRepository;
 
-    public List<PlannedVisit> getClientPlannedVisits(Principal principal) {
-        var registeredClient = clientCredentialsRepository.findRegisteredClientByUsername(principal.getName())
+    public List<PlannedVisit> getClientPlannedVisits(String username) {
+        var registeredClient = clientCredentialsRepository.findRegisteredClientByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
         return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId());
     }

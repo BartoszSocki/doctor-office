@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.modelmapper.TypeMap;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -20,17 +21,13 @@ import java.util.stream.Collectors;
 public class PlannedVisitsController {
 
     private PlannedVisitsService plannedVisitsService;
+//    private TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitDtoTypeMap;
     private ModelMapper modelMapper;
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/client/planned-visits")
     public List<PlannedVisitDto> getClientPlannedVisits(Principal principal) {
-        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal);
-
-        TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitMapper = modelMapper.createTypeMap(PlannedVisit.class, PlannedVisitDto.class);
-        plannedVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredClient().getId(), PlannedVisitDto::setRegisteredClientId));
-        plannedVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredDoctor().getId(), PlannedVisitDto::setRegisteredDoctorId));
-        plannedVisitMapper.addMappings(mapper -> mapper.map(src -> src.getScheduledVisit().getId(), PlannedVisitDto::setScheduledVisitId));
+        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal.getName());
 
         return plannedVisits.stream()
                 .map(v -> modelMapper.map(v, PlannedVisitDto.class))
@@ -39,8 +36,12 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping(path = "/doctor/planned-visits")
-    public List<PlannedVisit> getDoctorPlannedVisits(Principal principal) {
-        return plannedVisitsService.getDoctorPlannedVisits(principal.getName());
+    public List<PlannedVisitDto> getDoctorPlannedVisits(Principal principal) {
+        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(principal.getName());
+
+        return plannedVisits.stream()
+                .map(v -> modelMapper.map(v, PlannedVisitDto.class))
+                .toList();
     }
 
     @PreAuthorize("hasRole('CLIENT')")

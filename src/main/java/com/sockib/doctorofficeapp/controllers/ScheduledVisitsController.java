@@ -30,10 +30,6 @@ public class ScheduledVisitsController {
     @GetMapping(path = "/scheduled-visits/{visitId}")
     public ResponseEntity<ScheduledVisitDto> getVisit(@PathVariable Long visitId) {
         var scheduledVisit = scheduledVisitsService.getScheduledVisit(visitId);
-
-        TypeMap<ScheduledVisit, ScheduledVisitDto> scheduledVisitMapper = modelMapper.createTypeMap(ScheduledVisit.class, ScheduledVisitDto.class);
-        scheduledVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredDoctor().getId(), ScheduledVisitDto::setRegisteredDoctorId));
-
         var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class);
 
         return ResponseEntity.ok(scheduledVisitDto);
@@ -60,10 +56,6 @@ public class ScheduledVisitsController {
     @GetMapping(path = "/{doctorId}/scheduled-visits")
     public ResponseEntity<List<ScheduledVisitDto>> getAllVisits(@PathVariable Long doctorId) {
         var scheduledVisits = scheduledVisitsService.getScheduledVisits(doctorId);
-
-        TypeMap<ScheduledVisit, ScheduledVisitDto> scheduledVisitMapper = modelMapper.createTypeMap(ScheduledVisit.class, ScheduledVisitDto.class);
-        scheduledVisitMapper.addMappings(mapper -> mapper.map(src -> src.getRegisteredDoctor().getId(), ScheduledVisitDto::setRegisteredDoctorId));
-
         var scheduledVisitsDto = scheduledVisits.stream()
                 .map(v -> modelMapper.map(v, ScheduledVisitDto.class))
                 .toList();

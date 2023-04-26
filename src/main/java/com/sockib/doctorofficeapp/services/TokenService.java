@@ -23,7 +23,7 @@ public class TokenService {
         var role = details.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
 
         var iss = Instant.now();
-        var exp = iss.plusSeconds(60 * 60 * 24 * 365);
+        var exp = iss.plusSeconds(60 * 60);
 
         JwtClaimsSet claims = JwtClaimsSet.builder()
                 .claim("sub", sub)

@@ -162,9 +162,4 @@ public class AppConfig {
         return (jwkSelector, securityContext) -> jwkSelector.select(set);
     }
 
-    @Bean
-    public ModelMapper modelMapper() {
-        return new ModelMapper();
-    }
-
 }
