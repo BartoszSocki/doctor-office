@@ -3,14 +3,12 @@ package com.sockib.doctorofficeapp.repositories;
 import com.sockib.doctorofficeapp.entities.RegisteredDoctor;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
-import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 
 import java.time.LocalTime;
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -18,7 +16,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class ScheduledVisitRepositoryUnitTests {
 
     @Autowired
-    ScheduledVisitRepository scheduledVisitRepository;
+    ScheduledVisitsRepository scheduledVisitRepository;
 
     RegisteredDoctor registeredDoctor1;
     RegisteredDoctor registeredDoctor2;

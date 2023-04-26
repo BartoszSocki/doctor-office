@@ -18,7 +18,7 @@ import static org.junit.jupiter.api.Assertions.*;
 class PlannedVisitRepositoryUnitTest {
 
     @Autowired
-    PlannedVisitRepository plannedVisitRepository;
+    PlannedVisitsRepository plannedVisitRepository;
 
     @Test
     void givenPlannedVisit_whenSave_thenReturnSavedPlannedVisit() {

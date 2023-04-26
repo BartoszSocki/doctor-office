@@ -61,7 +61,7 @@ create table scheduled_visits(
 create table planned_visits(
     pk_id identity not null,
     fk_registered_doctor_id int not null,
-    fk_registered_client_id int not null,
+    fk_registered_client_id int null,
     fk_scheduled_visit_id int not null,
 
     visit_day datetime not null,

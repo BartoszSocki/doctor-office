@@ -21,7 +21,7 @@ public class DoctorInfoController {
 
     private DoctorInfoRepository doctorInfoRepository;
 
-    @PreAuthorize("hasRole('CLIENT')")
+    @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping(path = "/info")
     public ResponseEntity<DoctorInfo> doctor(Principal principal) {
         var username = principal.getName();
