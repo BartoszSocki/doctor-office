@@ -18,7 +18,6 @@ public class DoctorRegistrationController {
 
     private DoctorRegistrationService doctorRegistrationService;
 
-    @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping
     public void register(@Valid @RequestBody DoctorRegistrationDataDto doctorRegistrationDataDto) {
         doctorRegistrationService.registerDoctor(doctorRegistrationDataDto);

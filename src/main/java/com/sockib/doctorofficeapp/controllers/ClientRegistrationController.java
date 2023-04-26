@@ -17,7 +17,6 @@ public class ClientRegistrationController {
 
     private ClientRegistrationService clientRegistrationService;
 
-    @PreAuthorize("hasRole('CLIENT')")
     @PostMapping
     public void register(@Valid @RequestBody ClientRegistrationDataDto clientRegistrationDataDto) {
         clientRegistrationService.registerClient(clientRegistrationDataDto);

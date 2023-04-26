@@ -5,6 +5,7 @@ import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.repositories.DoctorCredentialsRepository;
 import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
+import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
@@ -28,12 +29,15 @@ public class ScheduledVisitsService {
         return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(id);
     }
 
-    public void removeScheduledVisit(Long visitId) {
-        scheduledVisitRepository.deleteById(visitId);
+    @Transactional
+    public void removeScheduledVisit(Long visitId, String username) {
+        scheduledVisitRepository.deleteScheduledVisitByIdAndRegisteredDoctorUsername(visitId, username);
+//        scheduledVisitRepository.deleteByIdAndDoctorUsername(visitId, username);
     }
 
-    public void updateScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Long visitId) {
-        var scheduledVisit = scheduledVisitRepository.findById(visitId).
+    @Transactional
+    public void updateScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Long visitId, String username) {
+        var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username).
                 orElseThrow(() -> new RuntimeException("TODO"));
 
         scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
@@ -48,7 +52,7 @@ public class ScheduledVisitsService {
         scheduledVisitRepository.save(scheduledVisit);
     }
 
-    public void createScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
+    public ScheduledVisit createScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
         var scheduledVisit = new ScheduledVisit();
 
         scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
@@ -64,7 +68,7 @@ public class ScheduledVisitsService {
                 .orElseThrow(() -> new UsernameNotFoundException(principal.getName()));
 
         scheduledVisit.setRegisteredDoctor(registeredDoctor);
-        scheduledVisitRepository.save(scheduledVisit);
+        return scheduledVisitRepository.save(scheduledVisit);
     }
 
 }
