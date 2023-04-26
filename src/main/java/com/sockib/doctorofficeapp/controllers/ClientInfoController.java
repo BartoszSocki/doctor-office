@@ -15,6 +15,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import java.security.Principal;
 
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
+import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
+
 @RestController
 @RequestMapping(path = "/api/client/info")
 @AllArgsConstructor
@@ -29,6 +32,9 @@ public class ClientInfoController {
         var clientInfo = clientInfoService.getClientInfo(principal.getName());
         var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class);
 
+        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).privateClientInfo(principal)).withSelfRel());
+        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(principal)).withRel("publicClientInfo"));
+
         return ResponseEntity.ok(clientInfoDto);
     }
 
@@ -36,6 +42,9 @@ public class ClientInfoController {
     public ResponseEntity<ClientPublicInfoDto> publicClientInfo(Principal principal) {
         var clientInfo = clientInfoService.getClientInfo(principal.getName());
         var clientInfoDto = modelMapper.map(clientInfo, ClientPublicInfoDto.class);
+
+        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(principal)).withSelfRel());
+        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).privateClientInfo(principal)).withRel("privateClientInfo"));
 
         return ResponseEntity.ok(clientInfoDto);
     }
