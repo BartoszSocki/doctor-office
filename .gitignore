@@ -38,3 +38,5 @@ build/
 mvnw
 mvnw.cmd
 keys
+mail
+application-prod.properties
