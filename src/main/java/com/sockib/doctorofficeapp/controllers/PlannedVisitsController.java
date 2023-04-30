@@ -49,14 +49,14 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @DeleteMapping(path = "/doctor/planned-visits/{visitId}")
-    public void cancelDoctorPlannedVisit(@PathVariable Long visitId) {
-        plannedVisitsService.cancelDoctorPlannedVisit(visitId);
+    public void cancelDoctorPlannedVisit(@PathVariable Long visitId, Principal principal) {
+        plannedVisitsService.cancelDoctorPlannedVisit(visitId, principal.getName());
     }
 
     @PreAuthorize("hasRole('CLIENT')")
     @DeleteMapping(path = "/client/planned-visits/{visitId}")
-    public void cancelClientPlannedVisit(@PathVariable Long visitId) {
-        plannedVisitsService.cancelClientPlannedVisit(visitId);
+    public void cancelClientPlannedVisit(@PathVariable Long visitId, Principal principal) {
+        plannedVisitsService.cancelClientPlannedVisit(visitId, principal.getName());
     }
 
 }

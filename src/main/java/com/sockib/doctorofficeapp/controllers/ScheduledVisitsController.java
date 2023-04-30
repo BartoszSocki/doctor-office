@@ -84,11 +84,12 @@ public class ScheduledVisitsController {
         var scheduledVisits = scheduledVisitsService.getScheduledVisits(doctorId);
         var scheduledVisitsDto = scheduledVisits.stream()
                 .map(v -> modelMapper.map(v, ScheduledVisitDto.class))
+                .map(v -> v.add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(v.getId())).withSelfRel()))
                 .toList();
 
-        for (var v : scheduledVisitsDto) {
-            v.add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(v.getId())).withSelfRel());
-        }
+//        for (var v : scheduledVisitsDto) {
+//            v.add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(v.getId())).withSelfRel());
+//        }
 
         CollectionModel<ScheduledVisitDto> scheduledVisitDtoCollectionModel = CollectionModel.of(scheduledVisitsDto);
         scheduledVisitDtoCollectionModel.add(linkTo(methodOn(ScheduledVisitsController.class).getAllVisits(doctorId)).withSelfRel());

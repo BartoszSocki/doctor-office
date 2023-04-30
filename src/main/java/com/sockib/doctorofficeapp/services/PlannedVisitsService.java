@@ -57,12 +57,32 @@ public class PlannedVisitsService {
         plannedVisitsRepository.save(plannedVisit);
     }
 
-    public void cancelDoctorPlannedVisit(Long visitId) {
+    public void cancelDoctorPlannedVisit(Long visitId, String username) {
+        var registeredDoctor = doctorCredentialsRepository.findRegisteredDoctorByUsername(username)
+                .orElseThrow(() -> new RuntimeException("TODO"));
+
+        var plannedVisit = plannedVisitsRepository.findById(visitId)
+                .orElseThrow(() -> new RuntimeException("TOOD"));
+
+        if (!plannedVisit.getRegisteredDoctor().getId().equals(registeredDoctor.getId())) {
+            throw new RuntimeException("TOOD");
+        }
+
         cancelVisit(visitId);
         // TODO send message to client
     }
 
-    public void cancelClientPlannedVisit(Long visitId) {
+    public void cancelClientPlannedVisit(Long visitId, String username) {
+        var registeredClient = clientCredentialsRepository.findRegisteredClientByUsername(username)
+                .orElseThrow(() -> new RuntimeException("TODO"));
+
+        var plannedVisit = plannedVisitsRepository.findById(visitId)
+                .orElseThrow(() -> new RuntimeException("TOOD"));
+
+        if (!plannedVisit.getRegisteredClient().getId().equals(registeredClient.getId())) {
+            throw new RuntimeException("TOOD");
+        }
+
         cancelVisit(visitId);
         // TODO send message to doctor
     }

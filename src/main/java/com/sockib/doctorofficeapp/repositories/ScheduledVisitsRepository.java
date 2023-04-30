@@ -21,6 +21,7 @@ public interface ScheduledVisitsRepository extends JpaRepository<ScheduledVisit,
     @Query("SELECT v FROM ScheduledVisit v WHERE v.id = :visitId AND v.registeredDoctor.username = :username")
     Optional<ScheduledVisit> findByIdAndDoctorUsername(Long visitId, String username);
 
+    // TODO rewrite it
     @Modifying
     void deleteScheduledVisitByIdAndRegisteredDoctorUsername(Long scheduledVisitId, String registeredDoctorUsername);
 //    @Query("DELETE FROM ScheduledVisit v WHERE v.id = :visitId AND v.registeredDoctor.username = :username")
