@@ -14,11 +14,11 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping(path = "/api/doctor/register")
 public class DoctorRegistrationController {
 
-    private DoctorRegistrationService doctorRegistrationService;
-
-    @PostMapping
-    public void register(@Valid @RequestBody DoctorRegistrationDataDto doctorRegistrationDataDto) {
-        doctorRegistrationService.registerDoctor(doctorRegistrationDataDto);
-    }
+//    private DoctorRegistrationService doctorRegistrationService;
+//
+//    @PostMapping
+//    public void register(@Valid @RequestBody DoctorRegistrationDataDto doctorRegistrationDataDto) {
+//        doctorRegistrationService.registerDoctor(doctorRegistrationDataDto);
+//    }
 
 }

@@ -20,7 +20,10 @@ public class TokenService {
 
     public String issueToken(UserDetails details) {
         var sub = details.getUsername();
-        var role = details.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.joining(" "));
+        var role = details.getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.joining(" "));
 
         var iss = Instant.now();
         var exp = iss.plusSeconds(60 * 60);

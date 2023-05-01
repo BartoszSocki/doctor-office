@@ -6,15 +6,15 @@ import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@Service
-@AllArgsConstructor
+//@Service
+//@AllArgsConstructor
 public class DoctorInfoService {
 
-    private DoctorInfoRepository doctorInfoRepository;
-
-    public DoctorInfo getDoctorInfo(String username) {
-        return doctorInfoRepository.findDoctorInfoByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
-    }
+//    private DoctorInfoRepository doctorInfoRepository;
+//
+//    public DoctorInfo getDoctorInfo(String username) {
+//        return doctorInfoRepository.findDoctorInfoByUsername(username)
+//                .orElseThrow(() -> new UsernameNotFoundException(username));
+//    }
 
 }

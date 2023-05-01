@@ -14,12 +14,12 @@ import org.springframework.web.bind.annotation.RestController;
 @AllArgsConstructor
 @RequestMapping(path = "/api/client/register")
 public class ClientRegistrationController {
-
-    private ClientRegistrationService clientRegistrationService;
-
-    @PostMapping
-    public void register(@Valid @RequestBody ClientRegistrationDataDto clientRegistrationDataDto) {
-        clientRegistrationService.registerClient(clientRegistrationDataDto);
-    }
+//
+//    private ClientRegistrationService clientRegistrationService;
+//
+//    @PostMapping
+//    public void register(@Valid @RequestBody ClientRegistrationDataDto clientRegistrationDataDto) {
+//        clientRegistrationService.registerClient(clientRegistrationDataDto);
+//    }
 
 }

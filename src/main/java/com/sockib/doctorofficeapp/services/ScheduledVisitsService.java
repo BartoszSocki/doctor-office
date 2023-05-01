@@ -3,7 +3,6 @@ package com.sockib.doctorofficeapp.services;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
-import com.sockib.doctorofficeapp.repositories.DoctorCredentialsRepository;
 import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -17,58 +16,58 @@ import java.util.List;
 @AllArgsConstructor
 public class ScheduledVisitsService {
 
-    private DoctorCredentialsRepository doctorCredentialsRepository;
-    private ScheduledVisitsRepository scheduledVisitRepository;
-
-    public ScheduledVisit getScheduledVisit(Long visitId) {
-        return scheduledVisitRepository.findById(visitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
-    }
-
-    public List<ScheduledVisit> getScheduledVisits(Long id) {
-        return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(id);
-    }
-
-    @Transactional
-    public void removeScheduledVisit(Long visitId, String username) {
-        scheduledVisitRepository.deleteScheduledVisitByIdAndRegisteredDoctorUsername(visitId, username);
+//    private DoctorCredentialsRepository doctorCredentialsRepository;
+//    private ScheduledVisitsRepository scheduledVisitRepository;
+//
+//    public ScheduledVisit getScheduledVisit(Long visitId) {
+//        return scheduledVisitRepository.findById(visitId)
+//                .orElseThrow(() -> new RuntimeException("TODO"));
+//    }
+//
+//    public List<ScheduledVisit> getScheduledVisits(Long id) {
+//        return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(id);
+//    }
+//
+//    @Transactional
+//    public void removeScheduledVisit(Long visitId, String username) {
+//        scheduledVisitRepository.deleteScheduledVisitByIdAndRegisteredDoctorUsername(visitId, username);
 //        scheduledVisitRepository.deleteByIdAndDoctorUsername(visitId, username);
-    }
-
-    @Transactional
-    public void updateScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Long visitId, String username) {
-        var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username).
-                orElseThrow(() -> new RuntimeException("TODO"));
-
-        scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
-        scheduledVisit.setVisitEndTime(scheduledVisitFormDto.getVisitEndTime());
-        scheduledVisit.setType(scheduledVisitFormDto.getType());
-        scheduledVisit.setPrice(scheduledVisitFormDto.getPrice());
-
-        // TODO needs validation
-        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
-        scheduledVisit.setLocalization(scheduledVisitFormDto.getLocalization());
-
-        scheduledVisitRepository.save(scheduledVisit);
-    }
-
-    public ScheduledVisit createScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
-        var scheduledVisit = new ScheduledVisit();
-
-        scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
-        scheduledVisit.setVisitEndTime(scheduledVisitFormDto.getVisitEndTime());
-        scheduledVisit.setType(scheduledVisitFormDto.getType());
-        scheduledVisit.setPrice(scheduledVisitFormDto.getPrice());
-
-        // TODO needs validation
-        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
-        scheduledVisit.setLocalization(scheduledVisitFormDto.getLocalization());
-
-        var registeredDoctor = doctorCredentialsRepository.findRegisteredDoctorByUsername(principal.getName())
-                .orElseThrow(() -> new UsernameNotFoundException(principal.getName()));
-
-        scheduledVisit.setRegisteredDoctor(registeredDoctor);
-        return scheduledVisitRepository.save(scheduledVisit);
-    }
-
+//    }
+//
+//    @Transactional
+//    public void updateScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Long visitId, String username) {
+//        var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username).
+//                orElseThrow(() -> new RuntimeException("TODO"));
+//
+//        scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
+//        scheduledVisit.setVisitEndTime(scheduledVisitFormDto.getVisitEndTime());
+//        scheduledVisit.setType(scheduledVisitFormDto.getType());
+//        scheduledVisit.setPrice(scheduledVisitFormDto.getPrice());
+//
+//         TODO needs validation
+//        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
+//        scheduledVisit.setLocalization(scheduledVisitFormDto.getLocalization());
+//
+//        scheduledVisitRepository.save(scheduledVisit);
+//    }
+//
+//    public ScheduledVisit createScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
+//        var scheduledVisit = new ScheduledVisit();
+//
+//        scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
+//        scheduledVisit.setVisitEndTime(scheduledVisitFormDto.getVisitEndTime());
+//        scheduledVisit.setType(scheduledVisitFormDto.getType());
+//        scheduledVisit.setPrice(scheduledVisitFormDto.getPrice());
+//
+//         TODO needs validation
+//        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
+//        scheduledVisit.setLocalization(scheduledVisitFormDto.getLocalization());
+//
+//        var registeredDoctor = doctorCredentialsRepository.findRegisteredDoctorByUsername(principal.getName())
+//                .orElseThrow(() -> new UsernameNotFoundException(principal.getName()));
+//
+//        scheduledVisit.setRegisteredDoctor(registeredDoctor);
+//        return scheduledVisitRepository.save(scheduledVisit);
+//    }
+//
 }

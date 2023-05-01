@@ -17,20 +17,20 @@ public class MapperConfig {
         return new ModelMapper();
     }
 
-    @Bean
-    public TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitToPlannedVisitDtoTypeMap(ModelMapper modelMapper) {
-        TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitMapper =
-                modelMapper.createTypeMap(PlannedVisit.class, PlannedVisitDto.class);
-
-        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
-                src.getRegisteredUser().getId(),PlannedVisitDto::setRegisteredClientId));
-        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
-                src.getRegisteredDoctor().getId(),PlannedVisitDto::setRegisteredDoctorId));
-        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
-                src.getScheduledVisit().getId(),PlannedVisitDto::setScheduledVisitId));
-
-        return plannedVisitMapper;
-    }
+//    @Bean
+//    public TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitToPlannedVisitDtoTypeMap(ModelMapper modelMapper) {
+//        TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitMapper =
+//                modelMapper.createTypeMap(PlannedVisit.class, PlannedVisitDto.class);
+//
+//        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
+//                src.getRegisteredUser().getId(),PlannedVisitDto::setRegisteredClientId));
+//        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
+//                src.getRegisteredDoctor().getId(),PlannedVisitDto::setRegisteredDoctorId));
+//        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
+//                src.getScheduledVisit().getId(),PlannedVisitDto::setScheduledVisitId));
+//
+//        return plannedVisitMapper;
+//    }
 
     @Bean
     public TypeMap<ScheduledVisit, ScheduledVisitDto> scheduledVisitToScheduledVisitDtoTypeMap(ModelMapper modelMapper) {

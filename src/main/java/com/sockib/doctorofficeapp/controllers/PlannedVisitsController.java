@@ -16,47 +16,47 @@ import java.util.List;
 @AllArgsConstructor
 public class PlannedVisitsController {
 
-    private PlannedVisitsService plannedVisitsService;
-    private ModelMapper modelMapper;
-
-    @PreAuthorize("hasRole('CLIENT')")
-    @GetMapping(path = "/client/planned-visits")
-    public List<PlannedVisitDto> getClientPlannedVisits(Principal principal) {
-        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal.getName());
-
-        return plannedVisits.stream()
-                .map(v -> modelMapper.map(v, PlannedVisitDto.class))
-                .toList();
-    }
-
-    @PreAuthorize("hasRole('DOCTOR')")
-    @GetMapping(path = "/doctor/planned-visits")
-    public List<PlannedVisitDto> getDoctorPlannedVisits(Principal principal) {
-        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(principal.getName());
-
-        return plannedVisits.stream()
-                .map(v -> modelMapper.map(v, PlannedVisitDto.class))
-                .toList();
-    }
-
-    @PreAuthorize("hasRole('CLIENT')")
-    @PostMapping(path = "/client/planned-visits")
-    public void requestPlannedVisit(Principal principal,
-                                    @RequestParam(name = "id") Long scheduledVisitId,
-                                    @RequestParam(name = "date")LocalDate date) {
-        plannedVisitsService.requestPlannedVisit(principal.getName(), scheduledVisitId, date);
-    }
-
-    @PreAuthorize("hasRole('DOCTOR')")
-    @DeleteMapping(path = "/doctor/planned-visits/{visitId}")
-    public void cancelDoctorPlannedVisit(@PathVariable Long visitId, Principal principal) {
-        plannedVisitsService.cancelDoctorPlannedVisit(visitId, principal.getName());
-    }
-
-    @PreAuthorize("hasRole('CLIENT')")
-    @DeleteMapping(path = "/client/planned-visits/{visitId}")
-    public void cancelClientPlannedVisit(@PathVariable Long visitId, Principal principal) {
-        plannedVisitsService.cancelClientPlannedVisit(visitId, principal.getName());
-    }
+//    private PlannedVisitsService plannedVisitsService;
+//    private ModelMapper modelMapper;
+//
+//    @PreAuthorize("hasRole('CLIENT')")
+//    @GetMapping(path = "/client/planned-visits")
+//    public List<PlannedVisitDto> getClientPlannedVisits(Principal principal) {
+//        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal.getName());
+//
+//        return plannedVisits.stream()
+//                .map(v -> modelMapper.map(v, PlannedVisitDto.class))
+//                .toList();
+//    }
+//
+//    @PreAuthorize("hasRole('DOCTOR')")
+//    @GetMapping(path = "/doctor/planned-visits")
+//    public List<PlannedVisitDto> getDoctorPlannedVisits(Principal principal) {
+//        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(principal.getName());
+//
+//        return plannedVisits.stream()
+//                .map(v -> modelMapper.map(v, PlannedVisitDto.class))
+//                .toList();
+//    }
+//
+//    @PreAuthorize("hasRole('CLIENT')")
+//    @PostMapping(path = "/client/planned-visits")
+//    public void requestPlannedVisit(Principal principal,
+//                                    @RequestParam(name = "id") Long scheduledVisitId,
+//                                    @RequestParam(name = "date")LocalDate date) {
+//        plannedVisitsService.requestPlannedVisit(principal.getName(), scheduledVisitId, date);
+//    }
+//
+//    @PreAuthorize("hasRole('DOCTOR')")
+//    @DeleteMapping(path = "/doctor/planned-visits/{visitId}")
+//    public void cancelDoctorPlannedVisit(@PathVariable Long visitId, Principal principal) {
+//        plannedVisitsService.cancelDoctorPlannedVisit(visitId, principal.getName());
+//    }
+//
+//    @PreAuthorize("hasRole('CLIENT')")
+//    @DeleteMapping(path = "/client/planned-visits/{visitId}")
+//    public void cancelClientPlannedVisit(@PathVariable Long visitId, Principal principal) {
+//        plannedVisitsService.cancelClientPlannedVisit(visitId, principal.getName());
+//    }
 
 }

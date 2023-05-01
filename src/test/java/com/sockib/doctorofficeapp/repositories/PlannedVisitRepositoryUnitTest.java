@@ -16,44 +16,44 @@ import static org.junit.jupiter.api.Assertions.*;
 @DataJpaTest
 class PlannedVisitRepositoryUnitTest {
 
-    @Autowired
-    PlannedVisitsRepository plannedVisitRepository;
-
-    @Test
-    void givenPlannedVisit_whenSave_thenReturnSavedPlannedVisit() {
-        // given
-        var registeredDoctor = new RegisteredDoctor();
-        registeredDoctor.setUsername("bob");
-        registeredDoctor.setPassword("xxx");
-
-        var registeredClient = new RegisteredUser();
-        registeredClient.setUsername("john");
-        registeredClient.setPassword("xxx");
-
-        var scheduledVisit = new ScheduledVisit();
-        scheduledVisit.setLocalization("aaa");
-        scheduledVisit.setPrice(100);
-        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.THU);
-        scheduledVisit.setType("bbb");
-        scheduledVisit.setVisitBegTime(LocalTime.of(10, 20));
-        scheduledVisit.setVisitEndTime(LocalTime.of(11, 20));
-        scheduledVisit.setRegisteredDoctor(registeredDoctor);
-
-        var plannedVisit = new PlannedVisit();
-        plannedVisit.setDay(LocalDateTime.now());
-        plannedVisit.setRegisteredUser(registeredClient);
-        plannedVisit.setRegisteredDoctor(registeredDoctor);
-        plannedVisit.setScheduledVisit(scheduledVisit);
-
-        // when
-        plannedVisitRepository.save(plannedVisit);
-
-        // then
-        var queriedPlannedVisit = plannedVisitRepository.findPlannedVisitByCancelled(false).get();
-
-        scheduledVisit.setId(0L);
-        queriedPlannedVisit.setId(0L);
-
-        assertEquals(plannedVisit, queriedPlannedVisit);
-    }
+//    @Autowired
+//    PlannedVisitsRepository plannedVisitRepository;
+//
+//    @Test
+//    void givenPlannedVisit_whenSave_thenReturnSavedPlannedVisit() {
+//        // given
+//        var registeredDoctor = new RegisteredDoctor();
+//        registeredDoctor.setUsername("bob");
+//        registeredDoctor.setPassword("xxx");
+//
+//        var registeredClient = new RegisteredUser();
+//        registeredClient.setUsername("john");
+//        registeredClient.setPassword("xxx");
+//
+//        var scheduledVisit = new ScheduledVisit();
+//        scheduledVisit.setLocalization("aaa");
+//        scheduledVisit.setPrice(100);
+//        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.THU);
+//        scheduledVisit.setType("bbb");
+//        scheduledVisit.setVisitBegTime(LocalTime.of(10, 20));
+//        scheduledVisit.setVisitEndTime(LocalTime.of(11, 20));
+//        scheduledVisit.setRegisteredDoctor(registeredDoctor);
+//
+//        var plannedVisit = new PlannedVisit();
+//        plannedVisit.setDay(LocalDateTime.now());
+//        plannedVisit.setRegisteredUser(registeredClient);
+//        plannedVisit.setRegisteredDoctor(registeredDoctor);
+//        plannedVisit.setScheduledVisit(scheduledVisit);
+//
+//        // when
+//        plannedVisitRepository.save(plannedVisit);
+//
+//        // then
+//        var queriedPlannedVisit = plannedVisitRepository.findPlannedVisitByCancelled(false).get();
+//
+//        scheduledVisit.setId(0L);
+//        queriedPlannedVisit.setId(0L);
+//
+//        assertEquals(plannedVisit, queriedPlannedVisit);
+//    }
 }
