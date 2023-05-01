@@ -1,5 +1,6 @@
 package com.sockib.doctorofficeapp.model.dto;
 
+import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
@@ -8,12 +9,7 @@ import org.springframework.hateoas.RepresentationModel;
 @Data
 public class DoctorPrivateInfoDto extends RepresentationModel<DoctorPrivateInfoDto> {
 
-    private Long id;
-    private String username;
-    private String name;
-    private String surname;
-    private String pesel;
     private String specialization;
-    private String pwz;
+    private RegisteredUser registeredUser;
 
 }

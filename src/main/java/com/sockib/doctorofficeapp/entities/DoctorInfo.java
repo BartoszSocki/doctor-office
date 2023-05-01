@@ -1,18 +1,18 @@
 package com.sockib.doctorofficeapp.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@Entity
-@Table(name = "doctors_info")
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+
+@Entity
+@Table(name = "doctors_info")
 public class DoctorInfo {
 
     @Id
@@ -24,6 +24,6 @@ public class DoctorInfo {
 
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "registered_doctor_id", referencedColumnName = "pk_id")
-    private RegisteredUser registeredDoctor;
+    private RegisteredUser registeredUser;
 
 }
