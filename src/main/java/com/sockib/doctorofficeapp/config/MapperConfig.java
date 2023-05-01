@@ -23,7 +23,7 @@ public class MapperConfig {
                 modelMapper.createTypeMap(PlannedVisit.class, PlannedVisitDto.class);
 
         plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
-                src.getRegisteredClient().getId(),PlannedVisitDto::setRegisteredClientId));
+                src.getRegisteredUser().getId(),PlannedVisitDto::setRegisteredClientId));
         plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
                 src.getRegisteredDoctor().getId(),PlannedVisitDto::setRegisteredDoctorId));
         plannedVisitMapper.addMappings(mapper ->mapper.map(src ->

@@ -1,6 +1,7 @@
 create table registered_users(
     pk_id identity not null,
 
+    role varchar(16) not null,
     email varchar(255) not null,
     password varchar(255) not null,
 

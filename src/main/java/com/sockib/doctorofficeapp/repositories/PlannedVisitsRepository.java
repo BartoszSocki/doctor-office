@@ -1,9 +1,7 @@
 package com.sockib.doctorofficeapp.repositories;
 
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
-import com.sockib.doctorofficeapp.entities.RegisteredClient;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 
 import java.util.List;

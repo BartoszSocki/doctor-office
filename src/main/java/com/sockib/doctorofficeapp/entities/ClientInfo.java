@@ -7,6 +7,8 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "clients_info")
 @Getter
@@ -16,19 +18,14 @@ import lombok.Setter;
 public class ClientInfo {
 
     @Id
+    @Column(name = "pk_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email")
-    private String username;
-    private String name;
-    private String surname;
+    @Column(name = "date_of_birth")
+    private LocalDate dateOfBirth;
 
-    private String pesel;
-    private String mobile;
-
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "registered_client_id", referencedColumnName = "id")
-    private RegisteredClient registeredClient;
+    @JoinColumn(name = "registered_client_id", referencedColumnName = "pk_id")
+    private RegisteredUser registeredUser;
 }

@@ -1,9 +1,9 @@
 package com.sockib.doctorofficeapp.services;
 
-import com.sockib.doctorofficeapp.entities.RegisteredClient;
+import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import com.sockib.doctorofficeapp.exceptions.UserAlreadyRegisteredException;
 import com.sockib.doctorofficeapp.model.dto.ClientRegistrationDataDto;
-import com.sockib.doctorofficeapp.repositories.ClientCredentialsRepository;
+import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
 import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
@@ -14,19 +14,19 @@ import org.springframework.stereotype.Service;
 @AllArgsConstructor
 public class ClientRegistrationService {
 
-    private ClientCredentialsRepository clientCredentialsRepository;
+    private RegisteredUserRepository clientCredentialsRepository;
     private ClientInfoRepository clientInfoRepository;
     private PasswordEncoder passwordEncoder;
 
     @Transactional
     public void registerClient(ClientRegistrationDataDto clientRegistrationDataDto) {
         var username = clientRegistrationDataDto.getUsername();
-        var client = clientCredentialsRepository.findRegisteredClientByUsername(username);
+        var client = clientCredentialsRepository.findRegisteredUserByUsername(username);
         client.ifPresent(u -> { throw new UserAlreadyRegisteredException(username);});
 
         var encodedPassword = passwordEncoder.encode(clientRegistrationDataDto.getPassword());
 
-        var registeredClient = new RegisteredClient();
+        var registeredClient = new RegisteredUser();
         registeredClient.setUsername(username);
         registeredClient.setPassword(encodedPassword);
 

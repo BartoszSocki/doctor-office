@@ -1,9 +1,6 @@
 package com.sockib.doctorofficeapp.services;
 
-import com.sockib.doctorofficeapp.entities.RegisteredClient;
-import com.sockib.doctorofficeapp.entities.RegisteredDoctor;
 import com.sockib.doctorofficeapp.exceptions.UserAlreadyRegisteredException;
-import com.sockib.doctorofficeapp.model.dto.ClientRegistrationDataDto;
 import com.sockib.doctorofficeapp.model.dto.DoctorRegistrationDataDto;
 import com.sockib.doctorofficeapp.repositories.DoctorCredentialsRepository;
 import jakarta.transaction.Transactional;

@@ -15,52 +15,52 @@ import java.util.Collection;
 import java.util.List;
 
 @Entity
-@Table(name = "registered_clients")
+@Table(name = "registered_users")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class RegisteredClient implements UserDetails {
+public class RegisteredUser implements UserDetails {
 
     @Id
+    @Column(name = "pk_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @Column(name = "email")
     private String username;
-
-    @JsonIgnore
-    @Column(name = "password")
     private String password;
+    // TODO enumerated
+    private String role;
 
-    @JsonIgnore
-    @OneToOne(mappedBy = "registeredClient")
-    private ClientInfo clientInfo;
+    private String name;
+    private String surname;
+
+    // TODO enumerated
+    private String gender;
+    private String mobile;
+    private Boolean verified;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority(Role.CLIENT.value()));
+        return List.of(new SimpleGrantedAuthority(role));
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
 
-    @JsonIgnore
     @Override
     public boolean isEnabled() {
         return true;

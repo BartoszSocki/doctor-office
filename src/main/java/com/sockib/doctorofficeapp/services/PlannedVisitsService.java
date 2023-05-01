@@ -1,15 +1,12 @@
 package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
-import com.sockib.doctorofficeapp.repositories.ClientCredentialsRepository;
 import com.sockib.doctorofficeapp.repositories.DoctorCredentialsRepository;
 import com.sockib.doctorofficeapp.repositories.PlannedVisitsRepository;
 import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
 import lombok.AllArgsConstructor;
-import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
-import java.security.Principal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -51,7 +48,7 @@ public class PlannedVisitsService {
         var plannedVisit = new PlannedVisit();
         plannedVisit.setScheduledVisit(scheduledVisit);
         plannedVisit.setRegisteredDoctor(registeredDoctor);
-        plannedVisit.setRegisteredClient(registeredClient);
+        plannedVisit.setRegisteredUser(registeredClient);
         plannedVisit.setDay(day);
 
         plannedVisitsRepository.save(plannedVisit);
@@ -79,7 +76,7 @@ public class PlannedVisitsService {
         var plannedVisit = plannedVisitsRepository.findById(visitId)
                 .orElseThrow(() -> new RuntimeException("TOOD"));
 
-        if (!plannedVisit.getRegisteredClient().getId().equals(registeredClient.getId())) {
+        if (!plannedVisit.getRegisteredUser().getId().equals(registeredClient.getId())) {
             throw new RuntimeException("TOOD");
         }
 

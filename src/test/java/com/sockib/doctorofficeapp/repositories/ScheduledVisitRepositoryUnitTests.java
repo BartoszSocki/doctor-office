@@ -1,6 +1,5 @@
 package com.sockib.doctorofficeapp.repositories;
 
-import com.sockib.doctorofficeapp.entities.RegisteredDoctor;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import org.junit.jupiter.api.BeforeEach;

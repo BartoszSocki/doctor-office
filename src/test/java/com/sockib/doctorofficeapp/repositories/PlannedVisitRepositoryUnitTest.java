@@ -1,8 +1,7 @@
 package com.sockib.doctorofficeapp.repositories;
 
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
-import com.sockib.doctorofficeapp.entities.RegisteredClient;
-import com.sockib.doctorofficeapp.entities.RegisteredDoctor;
+import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import org.junit.jupiter.api.Test;
@@ -27,7 +26,7 @@ class PlannedVisitRepositoryUnitTest {
         registeredDoctor.setUsername("bob");
         registeredDoctor.setPassword("xxx");
 
-        var registeredClient = new RegisteredClient();
+        var registeredClient = new RegisteredUser();
         registeredClient.setUsername("john");
         registeredClient.setPassword("xxx");
 
@@ -42,7 +41,7 @@ class PlannedVisitRepositoryUnitTest {
 
         var plannedVisit = new PlannedVisit();
         plannedVisit.setDay(LocalDateTime.now());
-        plannedVisit.setRegisteredClient(registeredClient);
+        plannedVisit.setRegisteredUser(registeredClient);
         plannedVisit.setRegisteredDoctor(registeredDoctor);
         plannedVisit.setScheduledVisit(scheduledVisit);
 

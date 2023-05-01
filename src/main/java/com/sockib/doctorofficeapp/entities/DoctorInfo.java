@@ -16,22 +16,14 @@ import lombok.Setter;
 public class DoctorInfo {
 
     @Id
+    @Column(name = "pk_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "email")
-    private String username;
-    private String name;
-    private String surname;
     private String specialization;
-    private String mobile;
 
-    private String pesel;
-    private String pwz;
-
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "registered_doctor_id", referencedColumnName = "id")
-    private RegisteredDoctor registeredDoctor;
+    @JoinColumn(name = "registered_doctor_id", referencedColumnName = "pk_id")
+    private RegisteredUser registeredDoctor;
 
 }

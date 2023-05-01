@@ -1,6 +1,6 @@
 package com.sockib.doctorofficeapp.services;
 
-import com.sockib.doctorofficeapp.repositories.ClientCredentialsRepository;
+import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -13,11 +13,11 @@ import org.springframework.stereotype.Service;
 @Qualifier("clientDetailsService")
 public class ClientDetailsService implements UserDetailsService {
 
-    private ClientCredentialsRepository clientCredentialsService;
+    private RegisteredUserRepository clientCredentialsService;
 
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        return clientCredentialsService.findRegisteredClientByUsername(username)
+        return clientCredentialsService.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> { throw new UsernameNotFoundException(username); });
     }
 }

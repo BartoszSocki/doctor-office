@@ -26,17 +26,14 @@ public class PlannedVisit {
     private LocalDateTime day;
     private boolean cancelled;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "id")
-    private RegisteredDoctor registeredDoctor;
+    @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "pk_id")
+    private RegisteredUser registeredDoctor;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
-    @JoinColumn(name = "fk_registered_client_id", referencedColumnName = "id")
-    private RegisteredClient registeredClient;
+    @JoinColumn(name = "fk_registered_client_id", referencedColumnName = "pk_id")
+    private RegisteredUser registeredClient;
 
-    @JsonIgnore
     @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "fk_scheduled_visit_id", referencedColumnName = "pk_id")
     private ScheduledVisit scheduledVisit;
