@@ -30,25 +30,24 @@ public class ClientInfoController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/info")
-    public ResponseEntity<ClientInfo> privateClientInfo(Principal principal) {
+    public ResponseEntity<ClientPrivateInfoDto> privateClientInfo(Principal principal) {
         var clientInfo = clientInfoService.getClientInfo(principal.getName());
-//        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class);
-//
-//        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).privateClientInfo(principal)).withSelfRel());
-//        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(principal)).withRel("publicClientInfo"));
+        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class);
 
-        return ResponseEntity.ok(clientInfo);
+        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).privateClientInfo(principal)).withSelfRel());
+        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(clientInfo.getId())).withRel("publicClientInfo"));
+
+        return ResponseEntity.ok(clientInfoDto);
     }
 
     @GetMapping(path = "/{clientId}/info")
-    public ResponseEntity<ClientInfo> publicClientInfo(@PathVariable Long clientId) {
+    public ResponseEntity<ClientPrivateInfoDto> publicClientInfo(@PathVariable Long clientId) {
         var clientInfo = clientInfoService.getClientInfo(clientId);
-//        var clientInfoDto = modelMapper.map(clientInfo, ClientPublicInfoDto.class);
-//
-//        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(principal)).withSelfRel());
-//        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).privateClientInfo(principal)).withRel("privateClientInfo"));
+        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class);
 
-        return ResponseEntity.ok(clientInfo);
+        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(clientId)).withSelfRel());
+
+        return ResponseEntity.ok(clientInfoDto);
     }
 
 }
