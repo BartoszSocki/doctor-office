@@ -1,20 +1,14 @@
 package com.sockib.doctorofficeapp.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
+import lombok.Data;
 
 import java.time.LocalDateTime;
 
+@Data
+
 @Entity
 @Table(name = "planned_visits")
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
 public class PlannedVisit {
 
     @Id

@@ -14,8 +14,9 @@ import org.springframework.stereotype.Service;
 import java.security.Principal;
 import java.util.List;
 
-@Service
 @AllArgsConstructor
+
+@Service
 public class ScheduledVisitsService {
 
     private RegisteredUserRepository registeredUserRepository;
