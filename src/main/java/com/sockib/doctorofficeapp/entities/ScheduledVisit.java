@@ -6,11 +6,7 @@ import lombok.*;
 
 import java.time.LocalTime;
 
-@Getter
-@Setter
-@AllArgsConstructor
-@NoArgsConstructor
-@ToString
+@Data
 
 @Entity
 @Table(name = "scheduled_visits")

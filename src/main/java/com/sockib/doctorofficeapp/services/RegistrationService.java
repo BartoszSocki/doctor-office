@@ -12,10 +12,12 @@ import com.sockib.doctorofficeapp.repositories.DoctorInfoRepository;
 import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+@Slf4j
 @AllArgsConstructor
 
 @Service
@@ -44,6 +46,8 @@ public class RegistrationService {
         doctorInfo.setRegisteredUser(persistedRegisteredUser);
 
         doctorInfoRepository.save(doctorInfo);
+
+        log.info("successfully registered new doctor: " + username);
     }
 
     @Transactional
@@ -62,6 +66,8 @@ public class RegistrationService {
         clientInfo.setRegisteredUser(persistedRegisteredUSer);
 
         clientInfoRepository.save(clientInfo);
+
+        log.info("successfully registered new client: " + username);
     }
 
 }

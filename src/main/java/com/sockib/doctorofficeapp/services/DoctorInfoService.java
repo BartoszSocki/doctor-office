@@ -9,8 +9,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-@AllArgsConstructor
 @Slf4j
+@AllArgsConstructor
 
 @Service
 public class DoctorInfoService {

@@ -41,7 +41,7 @@ public class ScheduledVisitsController {
     @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping(path = "/scheduled-visits")
     public ResponseEntity<ScheduledVisitDto> addVisit(@RequestBody ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
-        var scheduledVisit = scheduledVisitsService.createScheduledVisit(scheduledVisitFormDto, principal);
+        var scheduledVisit = scheduledVisitsService.createScheduledVisit(scheduledVisitFormDto, principal.getName());
         var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class);
         var scheduledVisitId = scheduledVisit.getId();
         var scheduledVisitDoctorId = scheduledVisit.getRegisteredDoctor().getId();
