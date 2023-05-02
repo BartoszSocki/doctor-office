@@ -1,12 +1,9 @@
 package com.sockib.doctorofficeapp.entities;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.time.LocalTime;
 
 @Getter
