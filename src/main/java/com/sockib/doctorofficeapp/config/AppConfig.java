@@ -51,10 +51,11 @@ public class AppConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain basicSecurity0(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.securityMatcher("/token", "/error");
+        http.securityMatcher("/token", "/error", "/register/**");
         http.authorizeHttpRequests(a -> {
             a.requestMatchers("/token").permitAll();
             a.requestMatchers("/error").permitAll();
+            a.requestMatchers("/register/**").permitAll();
         });
         http.httpBasic();
         http.sessionManagement(s -> s.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
@@ -66,8 +67,6 @@ public class AppConfig {
     public SecurityFilterChain basicSecurity1(HttpSecurity http) throws Exception {
         http.csrf().disable();
         http.authorizeHttpRequests(a -> {
-            a.requestMatchers("/api/client/register").permitAll();
-            a.requestMatchers("/api/doctor/register").permitAll();
             a.requestMatchers("/api/**").authenticated();
             a.anyRequest().authenticated();
         });

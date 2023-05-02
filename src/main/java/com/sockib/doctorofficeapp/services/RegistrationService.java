@@ -39,10 +39,11 @@ public class RegistrationService {
         registeredUser.setPassword(encodedPassword);
         registeredUser.setRole(Role.DOCTOR.value());
 
-        var registeredDoctor = modelMapper.map(doctorRegistrationDataDto, DoctorInfo.class);
+        var doctorInfo = modelMapper.map(doctorRegistrationDataDto, DoctorInfo.class);
+        var persistedRegisteredUser = registeredUserRepository.save(registeredUser);
+        doctorInfo.setRegisteredUser(persistedRegisteredUser);
 
-        doctorInfoRepository.save(registeredDoctor);
-        registeredUserRepository.save(registeredUser);
+        doctorInfoRepository.save(doctorInfo);
     }
 
     @Transactional
@@ -56,10 +57,11 @@ public class RegistrationService {
         registeredUser.setPassword(encodedPassword);
         registeredUser.setRole(Role.CLIENT.value());
 
-        var registeredClient = modelMapper.map(clientRegistrationDataDto, ClientInfo.class);
+        var clientInfo = modelMapper.map(clientRegistrationDataDto, ClientInfo.class);
+        var persistedRegisteredUSer = registeredUserRepository.save(registeredUser);
+        clientInfo.setRegisteredUser(persistedRegisteredUSer);
 
-        clientInfoRepository.save(registeredClient);
-        registeredUserRepository.save(registeredUser);
+        clientInfoRepository.save(clientInfo);
     }
 
 }
