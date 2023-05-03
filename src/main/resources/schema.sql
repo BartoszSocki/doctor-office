@@ -46,7 +46,7 @@ create table scheduled_visits(
     type varchar(60) not null,
 
     primary key (pk_id),
-    foreign key (fk_registered_doctor_id) references doctors_info(pk_id)
+    foreign key (fk_registered_doctor_id) references registered_users(pk_id)
 );
 
 create table planned_visits(
@@ -63,3 +63,18 @@ create table planned_visits(
     foreign key (fk_registered_client_id) references registered_users(pk_id),
     foreign key (fk_scheduled_visit_id) references scheduled_visits(pk_id)
 );
+
+create table notes(
+    pk_id identity not null,
+    fk_registered_doctor_id int not null,
+    fk_planned_visit_id int not null,
+
+    name varchar(255) not null,
+    content varchar(1024) not null,
+    date_of_creation datetime not null,
+    date_of_modification datetime not null,
+
+    primary key (pk_id),
+    foreign key (fk_registered_doctor_id) references registered_users(pk_id),
+    foreign key (fk_planned_visit_id) references planned_visits(pk_id)
+)

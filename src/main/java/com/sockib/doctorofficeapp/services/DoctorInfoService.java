@@ -31,4 +31,8 @@ public class DoctorInfoService {
                 .orElseThrow(() -> new RuntimeException("TODO"));
     }
 
+    public Long getDoctorRegisteredUserId(String username) {
+        return this.getDoctorInfo(username).getRegisteredUser().getId();
+    }
+
 }
