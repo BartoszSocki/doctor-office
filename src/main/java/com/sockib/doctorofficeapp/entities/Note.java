@@ -29,11 +29,11 @@ public class Note {
     @UpdateTimestamp
     private LocalDate dateOfModification;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "pk_id")
     private RegisteredUser registeredDoctor;
 
-    @OneToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
+    @ManyToOne(cascade = CascadeType.ALL, fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_planned_visit_id", referencedColumnName = "pk_id")
     private PlannedVisit plannedVisit;
 

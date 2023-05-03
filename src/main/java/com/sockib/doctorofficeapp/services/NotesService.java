@@ -12,7 +12,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDate;
+import java.util.Optional;
 
 @AllArgsConstructor
 
@@ -24,27 +24,18 @@ public class NotesService {
     private ModelMapper modelMapper;
     private RegisteredUserRepository registeredUserRepository;
 
-    public Note getOneNote(Long doctorId, Long noteId) {
-        var note = notesRepository.findById(noteId)
+    public Note getNote(String username, Long noteId) {
+        return notesRepository.findNoteByDoctorUsernameAndId(username, noteId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-
-        if (!doctorId.equals(note.getRegisteredDoctor().getId())) {
-            throw new AccessDeniedException("TODO");
-        }
-
-        return note;
     }
 
-    public Page<Note> getNotesByDoctorId(Long doctorId, Pageable pageable) {
-        return notesRepository.findAllByDoctorId(doctorId, pageable);
+    public Page<Note> getNotesByDoctorId(String username, Pageable pageable) {
+        return notesRepository.findAllByDoctorUsername(username, pageable);
     }
 
-    public Note editNote(Long doctorId, Long noteId, NoteDataFormDto noteDataFormDto) {
-        if (noteDataFormDto == null) {
-            throw new RuntimeException("TODO");
-        }
-
-        var note = this.getOneNote(doctorId, noteId);
+    public Note editNote(String username, Long noteId, Optional<NoteDataFormDto> optionalNoteDataFormDto) {
+        var noteDataFormDto = optionalNoteDataFormDto.orElseThrow(() -> new RuntimeException("TODO"));
+        var note = this.getNote(username, noteId);
 
         note.setName(noteDataFormDto.getName());
         note.setContent((noteDataFormDto.getContent()));
@@ -52,26 +43,18 @@ public class NotesService {
         return notesRepository.save(note);
     }
 
-    public void deleteNote(Long doctorId, Long noteId) {
-        var note = notesRepository.findById(noteId)
+    public void deleteNote(String username, Long noteId) {
+        var note = notesRepository.findNoteByDoctorUsernameAndId(username, noteId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-
-        if (!doctorId.equals(note.getRegisteredDoctor().getId())) {
-            throw new AccessDeniedException("TODO");
-        }
 
         notesRepository.delete(note);
     }
 
-    public Note createNote(Long doctorId, Long plannedVisitId, NoteDataFormDto noteDataFormDto) {
-        var plannedVisit = plannedVisitsRepository.findById(plannedVisitId)
+    public Note createNote(String username, Long plannedVisitId, NoteDataFormDto noteDataFormDto) {
+        var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, plannedVisitId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
-        if (!doctorId.equals(plannedVisit.getRegisteredDoctor().getId())) {
-            throw new AccessDeniedException("TODO");
-        }
-
-        var registeredDoctor = registeredUserRepository.findById(doctorId)
+        var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
         var note = modelMapper.map(noteDataFormDto, Note.class);

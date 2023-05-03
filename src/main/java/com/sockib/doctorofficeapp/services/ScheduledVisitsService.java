@@ -28,22 +28,31 @@ public class ScheduledVisitsService {
                 .orElseThrow(() -> new RuntimeException("TODO"));
     }
 
-    public List<ScheduledVisit> getScheduledVisits(Long doctorId) {
+    public List<ScheduledVisit> getAllScheduledVisits(Long doctorId) {
         return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(doctorId);
     }
 
+    public List<ScheduledVisit> getEnabledScheduledVisits(Long doctorId) {
+        return scheduledVisitRepository.findEnabledScheduledVisitsByDoctorId(doctorId);
+    }
+
     @Transactional
-    public void removeScheduledVisit(Long visitId, String username) {
+    public void disableScheduledVisit(Long visitId, String username) {
         var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
-        scheduledVisitRepository.delete(scheduledVisit);
+        if (scheduledVisit.getDisabled().equals(Boolean.FALSE)) {
+            throw new RuntimeException("TODO");
+        }
+
+        scheduledVisit.setDisabled(true);
+        scheduledVisitRepository.save(scheduledVisit);
     }
 
     @Transactional
     public ScheduledVisit updateScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Long visitId, String username) {
-        var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username).
-                orElseThrow(() -> new RuntimeException("TODO"));
+        var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username)
+                        .orElseThrow(() -> new RuntimeException("TODO"));
 
         scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
         scheduledVisit.setVisitEndTime(scheduledVisitFormDto.getVisitEndTime());

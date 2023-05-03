@@ -30,8 +30,9 @@ public class ScheduledVisit {
     private Integer price;
     private String localization;
     private String type;
+    private Boolean disabled;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "pk_id")
     private RegisteredUser registeredDoctor;
 }

@@ -33,7 +33,7 @@ public class ScheduledVisitsController {
         var doctorId = scheduledVisit.getRegisteredDoctor().getId();
 
         scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(visitId)).withSelfRel());
-        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class).getAllVisits(doctorId)).withRel("getAllVisits"));
+        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(doctorId)).withRel("getAllVisits"));
 
         return ResponseEntity.ok(scheduledVisitDto);
     }
@@ -51,7 +51,7 @@ public class ScheduledVisitsController {
                 .withSelfRel());
 
         scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class)
-                .getAllVisits(scheduledVisitDoctorId))
+                .getVisits(scheduledVisitDoctorId))
                 .withRel(IanaLinkRelations.COLLECTION));
 
         return ResponseEntity.created(linkTo(methodOn(ScheduledVisitsController.class)
@@ -62,27 +62,34 @@ public class ScheduledVisitsController {
     @PreAuthorize("hasRole('DOCTOR')")
     @DeleteMapping(path = "/scheduled-visits/{visitId}")
     public ResponseEntity<?> removeVisit(@PathVariable Long visitId, Principal principal) {
-        scheduledVisitsService.removeScheduledVisit(visitId, principal.getName());
+        scheduledVisitsService.disableScheduledVisit(visitId, principal.getName());
         return ResponseEntity.noContent().build();
     }
 
 //     TODO test it
     @PreAuthorize("hasRole('DOCTOR')")
     @PutMapping(path = "/scheduled-visits/{visitId}")
-    public void updateVisit(@PathVariable Long visitId, @RequestBody ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
-        scheduledVisitsService.updateScheduledVisit(scheduledVisitFormDto, visitId, principal.getName());
+    public ResponseEntity<ScheduledVisitDto> updateVisit(@PathVariable Long visitId, @RequestBody ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
+        var scheduledVisit = scheduledVisitsService.updateScheduledVisit(scheduledVisitFormDto, visitId, principal.getName());
+        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class);
+
+        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class)
+                .getVisit(visitId))
+                .withSelfRel());
+
+        return ResponseEntity.ok(scheduledVisitDto);
     }
 
     @GetMapping(path = "/{doctorId}/scheduled-visits")
-    public ResponseEntity<CollectionModel<ScheduledVisitDto>> getAllVisits(@PathVariable Long doctorId) {
-        var scheduledVisits = scheduledVisitsService.getScheduledVisits(doctorId);
+    public ResponseEntity<CollectionModel<ScheduledVisitDto>> getVisits(@PathVariable Long doctorId) {
+        var scheduledVisits = scheduledVisitsService.getEnabledScheduledVisits(doctorId);
         var scheduledVisitsDto = scheduledVisits.stream()
                 .map(v -> modelMapper.map(v, ScheduledVisitDto.class))
                 .map(v -> v.add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(v.getId())).withSelfRel()))
                 .toList();
 
         CollectionModel<ScheduledVisitDto> scheduledVisitDtoCollectionModel = CollectionModel.of(scheduledVisitsDto);
-        scheduledVisitDtoCollectionModel.add(linkTo(methodOn(ScheduledVisitsController.class).getAllVisits(doctorId)).withSelfRel());
+        scheduledVisitDtoCollectionModel.add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(doctorId)).withSelfRel());
 
         return ResponseEntity.ok(scheduledVisitDtoCollectionModel);
     }
