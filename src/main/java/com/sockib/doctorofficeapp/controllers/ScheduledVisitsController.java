@@ -29,11 +29,8 @@ public class ScheduledVisitsController {
     @GetMapping(path = "/scheduled-visits/{visitId}")
     public ResponseEntity<ScheduledVisitDto> getVisit(@PathVariable Long visitId) {
         var scheduledVisit = scheduledVisitsService.getScheduledVisit(visitId);
-        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class);
-        var doctorId = scheduledVisit.getRegisteredDoctor().getId();
-
-        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(visitId)).withSelfRel());
-        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(doctorId)).withRel("getAllVisits"));
+        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class)
+                .add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(visitId)).withSelfRel());
 
         return ResponseEntity.ok(scheduledVisitDto);
     }
@@ -69,13 +66,12 @@ public class ScheduledVisitsController {
 //     TODO test it
     @PreAuthorize("hasRole('DOCTOR')")
     @PutMapping(path = "/scheduled-visits/{visitId}")
-    public ResponseEntity<ScheduledVisitDto> updateVisit(@PathVariable Long visitId, @RequestBody ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
+    public ResponseEntity<ScheduledVisitDto> updateVisit(@PathVariable Long visitId,
+                                                         @RequestBody ScheduledVisitFormDto scheduledVisitFormDto,
+                                                         Principal principal) {
         var scheduledVisit = scheduledVisitsService.updateScheduledVisit(scheduledVisitFormDto, visitId, principal.getName());
-        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class);
-
-        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class)
-                .getVisit(visitId))
-                .withSelfRel());
+        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class)
+                .add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(visitId)).withSelfRel());
 
         return ResponseEntity.ok(scheduledVisitDto);
     }
