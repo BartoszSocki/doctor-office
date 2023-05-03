@@ -20,15 +20,15 @@ public class PlannedVisit {
     private LocalDateTime day;
     private boolean cancelled;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "pk_id")
     private RegisteredUser registeredDoctor;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "fk_registered_client_id", referencedColumnName = "pk_id")
     private RegisteredUser registeredClient;
 
-    @OneToOne(cascade = CascadeType.ALL)
+    @OneToOne
     @JoinColumn(name = "fk_scheduled_visit_id", referencedColumnName = "pk_id")
     private ScheduledVisit scheduledVisit;
 }
