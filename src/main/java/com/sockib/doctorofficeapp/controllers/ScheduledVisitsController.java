@@ -13,6 +13,7 @@ import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -70,17 +71,14 @@ public class ScheduledVisitsController {
     }
 
     @GetMapping(path = "/{doctorId}/scheduled-visits")
-    public ResponseEntity<CollectionModel<ScheduledVisitDto>> getVisits(@PathVariable Long doctorId) {
+    public ResponseEntity<List<ScheduledVisitDto>> getVisits(@PathVariable Long doctorId) {
         var scheduledVisits = scheduledVisitsService.getEnabledScheduledVisits(doctorId);
         var scheduledVisitsDto = scheduledVisits.stream()
                 .map(v -> modelMapper.map(v, ScheduledVisitDto.class))
                 .map(v -> v.add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(v.getId())).withSelfRel()))
                 .toList();
 
-        CollectionModel<ScheduledVisitDto> scheduledVisitDtoCollectionModel = CollectionModel.of(scheduledVisitsDto);
-        scheduledVisitDtoCollectionModel.add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(doctorId)).withSelfRel());
-
-        return ResponseEntity.ok(scheduledVisitDtoCollectionModel);
+        return ResponseEntity.ok(scheduledVisitsDto);
     }
 
 }
