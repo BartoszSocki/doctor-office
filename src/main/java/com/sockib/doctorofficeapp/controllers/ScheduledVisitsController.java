@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
 import org.springframework.hateoas.IanaLinkRelations;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
@@ -37,23 +38,15 @@ public class ScheduledVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping(path = "/scheduled-visits")
-    public ResponseEntity<ScheduledVisitDto> addVisit(@RequestBody ScheduledVisitFormDto scheduledVisitFormDto, Principal principal) {
+    public ResponseEntity<ScheduledVisitDto> addVisit(@RequestBody ScheduledVisitFormDto scheduledVisitFormDto,
+                                                      Principal principal) {
         var scheduledVisit = scheduledVisitsService.createScheduledVisit(scheduledVisitFormDto, principal.getName());
-        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class);
-        var scheduledVisitId = scheduledVisit.getId();
-        var scheduledVisitDoctorId = scheduledVisit.getRegisteredDoctor().getId();
-
-        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class)
-                .getVisit(scheduledVisitId))
+        var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class)
+                .add(linkTo(methodOn(ScheduledVisitsController.class)
+                .getVisit(scheduledVisit.getId()))
                 .withSelfRel());
 
-        scheduledVisitDto.add(linkTo(methodOn(ScheduledVisitsController.class)
-                .getVisits(scheduledVisitDoctorId))
-                .withRel(IanaLinkRelations.COLLECTION));
-
-        return ResponseEntity.created(linkTo(methodOn(ScheduledVisitsController.class)
-                .getVisit(scheduledVisitId)).toUri())
-                .body(scheduledVisitDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(scheduledVisitDto);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")

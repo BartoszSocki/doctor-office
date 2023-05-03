@@ -59,14 +59,13 @@ public class NotesController {
     }
 
     @PostMapping(path = "/plannedVisit/{plannedVisitId}")
-    @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<NoteDataDto> createNote(@PathVariable Long plannedVisitId,
                                                   @RequestBody NoteDataFormDto noteDataFormDto, Principal principal) {
         var note = notesService.createNote(principal.getName(), plannedVisitId, noteDataFormDto);
         var noteDataDto = modelMapper.map(note, NoteDataDto.class)
                 .add(linkTo(methodOn(NotesController.class).getNote(note.getId(), principal)).withSelfRel());
 
-        return ResponseEntity.ok(noteDataDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(noteDataDto);
     }
 
     @DeleteMapping(path = "/{noteId}")
