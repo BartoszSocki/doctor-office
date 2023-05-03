@@ -1,10 +1,7 @@
 package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
-import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
-import com.sockib.doctorofficeapp.repositories.DoctorInfoRepository;
-import com.sockib.doctorofficeapp.repositories.PlannedVisitsRepository;
-import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
+import com.sockib.doctorofficeapp.repositories.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,61 +18,63 @@ public class PlannedVisitsService {
 
     private ScheduledVisitsRepository scheduledVisitsRepository;
     private PlannedVisitsRepository plannedVisitsRepository;
-    private ClientInfoRepository clientInfoRepository;
-    private DoctorInfoRepository doctorInfoRepository;
+    private RegisteredUserRepository registeredUserRepository;
 
     private MailService mailService;
 
     public List<PlannedVisit> getClientPlannedVisits(String username) {
-        var clientInfo = clientInfoRepository.findClientInfoByUsername(username)
+        var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-        return plannedVisitsRepository.findPlannedVisitsByClientId(clientInfo.getId());
+        return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId());
     }
 
     public List<PlannedVisit> getDoctorPlannedVisits(String username) {
-        var doctorInfo = doctorInfoRepository.findDoctorInfoByUsername(username)
+        var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-        return plannedVisitsRepository.findPlannedVisitsByDoctorId(doctorInfo.getId());
+        return plannedVisitsRepository.findPlannedVisitsByDoctorId(registeredDoctor.getId());
     }
 
-    public void requestPlannedVisit(String username, Long scheduledVisitId, LocalDate date) {
+    public PlannedVisit requestPlannedVisit(String username, Long scheduledVisitId, LocalDate date) {
         var scheduledVisit = scheduledVisitsRepository.findById(scheduledVisitId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
-        var registeredClient = clientInfoRepository.findClientInfoByUsername(username)
+        var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
-        var registeredDoctor = doctorInfoRepository.findDoctorInfoByUsername(username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+        var registeredDoctor = scheduledVisit.getRegisteredDoctor();
 
         var time = scheduledVisit.getVisitBegTime();
         var day = LocalDateTime.of(date, time);
 
+        var isTaken = plannedVisitsRepository.findPlannedVisitsByDoctorUsernameAndDate(registeredDoctor.getUsername(), day).stream()
+                .anyMatch(v -> !v.isCancelled());
+
+        if (isTaken) {
+            throw new RuntimeException("TODO");
+        }
+
         var plannedVisit = new PlannedVisit();
         plannedVisit.setScheduledVisit(scheduledVisit);
-        plannedVisit.setRegisteredDoctor(registeredDoctor.getRegisteredUser());
-        plannedVisit.setRegisteredClient(registeredClient.getRegisteredUser());
+        plannedVisit.setRegisteredDoctor(registeredDoctor);
+        plannedVisit.setRegisteredClient(registeredClient);
         plannedVisit.setDay(day);
 
-        plannedVisitsRepository.save(plannedVisit);
+        return plannedVisitsRepository.save(plannedVisit);
     }
 
     @Transactional
     public void cancelDoctorPlannedVisit(Long visitId, String username) {
-        var doctorInfo = doctorInfoRepository.findDoctorInfoByUsername(username)
+        var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
-        var plannedVisit = plannedVisitsRepository.findById(visitId)
+        var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-
-        if (!plannedVisit.getRegisteredDoctor().getId().equals(doctorInfo.getRegisteredUser().getId())) {
-            throw new RuntimeException("TODO");
-        }
 
         cancelVisit(plannedVisit);
+
         var clientEmail = plannedVisit.getRegisteredClient().getUsername();
-        var doctorName = doctorInfo.getRegisteredUser().getName();
-        var doctorSurname = doctorInfo.getRegisteredUser().getSurname();
+        var doctorName = registeredDoctor.getName();
+        var doctorSurname = registeredDoctor.getSurname();
         mailService.sendMail(clientEmail, "cancellation of a visit",
                 "Doctor " + doctorName + " " + doctorSurname +
                         " has cancelled your visit (" + plannedVisit.getDay().format(DateTimeFormatter.ISO_LOCAL_DATE) + ")");
@@ -83,20 +82,16 @@ public class PlannedVisitsService {
 
     @Transactional
     public void cancelClientPlannedVisit(Long visitId, String username) {
-        var clientInfo = clientInfoRepository.findClientInfoByUsername(username)
+        var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
 
-        var plannedVisit = plannedVisitsRepository.findById(visitId)
+        var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-
-        if (!plannedVisit.getRegisteredClient().getId().equals(clientInfo.getRegisteredUser().getId())) {
-            throw new RuntimeException("TODO");
-        }
 
         cancelVisit(plannedVisit);
         var doctorEmail = plannedVisit.getRegisteredDoctor().getUsername();
-        var clientName = clientInfo.getRegisteredUser().getName();
-        var clientSurname = clientInfo.getRegisteredUser().getSurname();
+        var clientName = registeredClient.getName();
+        var clientSurname = registeredClient.getSurname();
         mailService.sendMail(doctorEmail, "cancellation of a visit",
                 "Client " + clientName + " " + clientSurname +
                         " has cancelled a visit (" + plannedVisit.getDay().format(DateTimeFormatter.ISO_LOCAL_DATE) + ")");

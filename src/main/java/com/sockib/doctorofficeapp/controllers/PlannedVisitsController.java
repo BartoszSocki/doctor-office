@@ -4,6 +4,8 @@ import com.sockib.doctorofficeapp.model.dto.PlannedVisitDto;
 import com.sockib.doctorofficeapp.services.PlannedVisitsService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,30 +24,33 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/client/planned-visits")
-    public List<PlannedVisitDto> getClientPlannedVisits(Principal principal) {
-        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal.getName());
-
-        return plannedVisits.stream()
+    public ResponseEntity<List<PlannedVisitDto>> getClientPlannedVisits(Principal principal) {
+        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal.getName()).stream()
                 .map(v -> modelMapper.map(v, PlannedVisitDto.class))
                 .toList();
+
+        return ResponseEntity.ok(plannedVisits);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping(path = "/doctor/planned-visits")
-    public List<PlannedVisitDto> getDoctorPlannedVisits(Principal principal) {
-        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(principal.getName());
-
-        return plannedVisits.stream()
+    public ResponseEntity<List<PlannedVisitDto>> getDoctorPlannedVisits(Principal principal) {
+        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(principal.getName()).stream()
                 .map(v -> modelMapper.map(v, PlannedVisitDto.class))
                 .toList();
+
+        return ResponseEntity.ok(plannedVisits);
     }
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping(path = "/client/planned-visits")
-    public void requestPlannedVisit(Principal principal,
-                                    @RequestParam(name = "id") Long scheduledVisitId,
-                                    @RequestParam(name = "date") LocalDate date) {
-        plannedVisitsService.requestPlannedVisit(principal.getName(), scheduledVisitId, date);
+    public ResponseEntity<PlannedVisitDto> requestPlannedVisit(Principal principal,
+                                                               @RequestParam(name = "id") Long scheduledVisitId,
+                                                               @RequestParam(name = "date") LocalDate date) {
+        var plannedVisit = plannedVisitsService.requestPlannedVisit(principal.getName(), scheduledVisitId, date);
+        var plannedVisitDto = modelMapper.map(plannedVisit, PlannedVisitDto.class);
+
+        return ResponseEntity.status(HttpStatus.CREATED).body(plannedVisitDto);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
