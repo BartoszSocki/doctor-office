@@ -34,8 +34,7 @@ public class NotesController {
         var doctorId = doctorInfoService.getDoctorRegisteredUserId(principal.getName());
         var page = notesService.getNotesByDoctorId(doctorId, pageable)
                 .map(n -> modelMapper.map(n, NoteDataDto.class))
-                .map(n -> n.add(linkTo(methodOn(NotesController.class).getNote(n.getId(), principal)).withSelfRel()))
-                .map(n -> n.add(linkTo(methodOn(NotesController.class).editNote(n.getId(), null, principal)).withRel("editNote")));
+                .map(n -> n.add(linkTo(methodOn(NotesController.class).getNote(n.getId(), principal)).withSelfRel()));
 
         return ResponseEntity.ok(page);
     }
