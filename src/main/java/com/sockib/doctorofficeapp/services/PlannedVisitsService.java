@@ -4,6 +4,8 @@ import com.sockib.doctorofficeapp.entities.PlannedVisit;
 import com.sockib.doctorofficeapp.repositories.*;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
@@ -22,18 +24,19 @@ public class PlannedVisitsService {
 
     private MailService mailService;
 
-    public List<PlannedVisit> getClientPlannedVisits(String username) {
+    public Page<PlannedVisit> getClientPlannedVisits(String username, Pageable pageable) {
         var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-        return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId());
+        return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId(), pageable);
     }
 
-    public List<PlannedVisit> getDoctorPlannedVisits(String username) {
+    public Page<PlannedVisit> getDoctorPlannedVisits(String username, Pageable pageable) {
         var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-        return plannedVisitsRepository.findPlannedVisitsByDoctorId(registeredDoctor.getId());
+        return plannedVisitsRepository.findPlannedVisitsByDoctorId(registeredDoctor.getId(), pageable);
     }
 
+    // TODO check if date matches day
     public PlannedVisit requestPlannedVisit(String username, Long scheduledVisitId, LocalDate date) {
         var scheduledVisit = scheduledVisitsRepository.findById(scheduledVisitId)
                 .orElseThrow(() -> new RuntimeException("TODO"));

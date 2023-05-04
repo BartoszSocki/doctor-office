@@ -21,3 +21,9 @@ values ( 10000, 10, 20, 1000, timestamp '2023-04-04 17:00:00');
 
 insert into notes (pk_id, fk_registered_doctor_id, fk_planned_visit_id, name, content, date_of_creation, date_of_modification)
 values ( 100000, 10, 10000, 'notatka 1', 'super notatka', date '2023-01-01', date '2023-02-02');
+
+insert into notes (pk_id, fk_registered_doctor_id, fk_planned_visit_id, name, content, date_of_creation, date_of_modification)
+values ( 200000, 10, 10000, 'notatka 2', 'super notatka', date '2023-01-01', date '2023-02-02');
+
+insert into notes (pk_id, fk_registered_doctor_id, fk_planned_visit_id, name, content, date_of_creation, date_of_modification)
+values ( 300000, 10, 10000, 'notatka 3', 'super notatka', date '2023-01-01', date '2023-02-02');

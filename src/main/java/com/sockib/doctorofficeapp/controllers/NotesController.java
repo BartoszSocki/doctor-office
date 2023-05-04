@@ -27,6 +27,7 @@ public class NotesController {
 
     private NotesService notesService;
     private ModelMapper modelMapper;
+    
 
     @GetMapping
     public ResponseEntity<Page<NoteDataDto>> getDoctorNotes(Pageable pageable, Principal principal) {

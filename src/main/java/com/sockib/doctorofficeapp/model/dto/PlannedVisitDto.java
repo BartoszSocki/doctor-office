@@ -1,11 +1,14 @@
 package com.sockib.doctorofficeapp.model.dto;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
+import org.springframework.hateoas.RepresentationModel;
 
 import java.time.LocalDateTime;
 
+@EqualsAndHashCode(callSuper = false)
 @Data
-public class PlannedVisitDto {
+public class PlannedVisitDto extends RepresentationModel<PlannedVisitDto> {
 
     private Long id;
     private LocalDateTime day;
