@@ -1,6 +1,8 @@
 package com.sockib.doctorofficeapp.exceptions.handlers;
 
 import com.sockib.doctorofficeapp.exceptions.UserAlreadyRegisteredException;
+import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
+import com.sockib.doctorofficeapp.model.dto.ExceptionDto;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ControllerAdvice;
@@ -11,12 +13,17 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = UserAlreadyRegisteredException.class)
     public ResponseEntity<?> handleUserAlreadyRegisteredException(UserAlreadyRegisteredException ex) {
-        return ResponseEntity.status(ex.getStatusCode()).body(ex.getBody());
+        return ResponseEntity.badRequest().body(ExceptionDto.toDto(ex));
     }
     
     @ExceptionHandler(value = BadCredentialsException.class)
     public ResponseEntity<?> handleBadCredentialsException(BadCredentialsException ex) {
-        return ResponseEntity.badRequest().body(ex.getMessage());
+        return ResponseEntity.badRequest().body(ExceptionDto.toDto(ex));
+    }
+
+    @ExceptionHandler(value = UserNotFoundException.class)
+    public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ExceptionDto.toDto(ex));
     }
 
 }
