@@ -9,6 +9,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -29,8 +30,9 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/client/planned-visits")
-    public ResponseEntity<Page<PlannedVisitDto>> getClientPlannedVisits(Pageable pageable, Principal principal) {
-        var plannedVisits = plannedVisitsService.getClientPlannedVisits(principal.getName(), pageable)
+    public ResponseEntity<Page<PlannedVisitDto>> getClientPlannedVisits(Pageable pageable) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var plannedVisits = plannedVisitsService.getClientPlannedVisits(authentication.getName(), pageable)
                 .map(v -> modelMapper.map(v, PlannedVisitDto.class));
 //                .map(v -> v.add(linkTo(methodOn(PlannedVisitsController.class))));
 
@@ -39,8 +41,9 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping(path = "/doctor/planned-visits")
-    public ResponseEntity<Page<PlannedVisitDto>> getDoctorPlannedVisits(Pageable pageable, Principal principal) {
-        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(principal.getName(), pageable)
+    public ResponseEntity<Page<PlannedVisitDto>> getDoctorPlannedVisits(Pageable pageable) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(authentication.getName(), pageable)
                 .map(v -> modelMapper.map(v, PlannedVisitDto.class));
 
         return ResponseEntity.ok(plannedVisits);
@@ -48,10 +51,10 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('CLIENT')")
     @PostMapping(path = "/client/planned-visits")
-    public ResponseEntity<PlannedVisitDto> requestPlannedVisit(Principal principal,
-                                                               @RequestParam(name = "id") Long scheduledVisitId,
+    public ResponseEntity<PlannedVisitDto> requestPlannedVisit(@RequestParam(name = "id") Long scheduledVisitId,
                                                                @RequestParam(name = "date") LocalDate date) {
-        var plannedVisit = plannedVisitsService.requestPlannedVisit(principal.getName(), scheduledVisitId, date);
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var plannedVisit = plannedVisitsService.requestPlannedVisit(authentication.getName(), scheduledVisitId, date);
         var plannedVisitDto = modelMapper.map(plannedVisit, PlannedVisitDto.class);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(plannedVisitDto);
@@ -59,14 +62,16 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @DeleteMapping(path = "/doctor/planned-visits/{visitId}")
-    public void cancelDoctorPlannedVisit(@PathVariable Long visitId, Principal principal) {
-        plannedVisitsService.cancelDoctorPlannedVisit(visitId, principal.getName());
+    public void cancelDoctorPlannedVisit(@PathVariable Long visitId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        plannedVisitsService.cancelDoctorPlannedVisit(visitId, authentication.getName());
     }
 
     @PreAuthorize("hasRole('CLIENT')")
     @DeleteMapping(path = "/client/planned-visits/{visitId}")
-    public void cancelClientPlannedVisit(@PathVariable Long visitId, Principal principal) {
-        plannedVisitsService.cancelClientPlannedVisit(visitId, principal.getName());
+    public void cancelClientPlannedVisit(@PathVariable Long visitId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        plannedVisitsService.cancelClientPlannedVisit(visitId, authentication.getName());
     }
 
 }
