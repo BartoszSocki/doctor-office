@@ -1,5 +1,7 @@
 package com.sockib.doctorofficeapp.exceptions.handlers;
 
+import com.sockib.doctorofficeapp.exceptions.PlannedVisitAlreadyTakenException;
+import com.sockib.doctorofficeapp.exceptions.UnableToGetResourceException;
 import com.sockib.doctorofficeapp.exceptions.UserAlreadyRegisteredException;
 import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
 import com.sockib.doctorofficeapp.model.dto.ExceptionDto;
@@ -23,6 +25,16 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(value = UserNotFoundException.class)
     public ResponseEntity<?> handleUserNotFoundException(UserNotFoundException ex) {
+        return ResponseEntity.badRequest().body(ExceptionDto.toDto(ex));
+    }
+
+    @ExceptionHandler(value = UnableToGetResourceException.class)
+    public ResponseEntity<?> handleUnableToGetResourceException(UnableToGetResourceException ex) {
+        return ResponseEntity.badRequest().body(ExceptionDto.toDto(ex));
+    }
+
+    @ExceptionHandler(value = PlannedVisitAlreadyTakenException.class)
+    public ResponseEntity<?> handlePlannedVisitAlreadyTakenException(PlannedVisitAlreadyTakenException ex) {
         return ResponseEntity.badRequest().body(ExceptionDto.toDto(ex));
     }
 
