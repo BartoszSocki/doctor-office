@@ -12,6 +12,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.List;
+import java.util.Optional;
 
 @AllArgsConstructor
 
@@ -30,10 +31,20 @@ public class PlannedVisitsService {
         return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId(), pageable);
     }
 
+    public PlannedVisit getClientPlannedVisit(String username, Long visitId) {
+        return plannedVisitsRepository.findPlannedVisitByClientUsernameAndVisitId(username, visitId)
+                .orElseThrow(() -> new RuntimeException("TODO"));
+    }
+
     public Page<PlannedVisit> getDoctorPlannedVisits(String username, Pageable pageable) {
         var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new RuntimeException("TODO"));
         return plannedVisitsRepository.findPlannedVisitsByDoctorId(registeredDoctor.getId(), pageable);
+    }
+
+    public PlannedVisit getDoctorPlannedVisit(String username, Long visitId) {
+        return plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
+                .orElseThrow(() -> new RuntimeException("TODO"));
     }
 
     // TODO check if date matches day

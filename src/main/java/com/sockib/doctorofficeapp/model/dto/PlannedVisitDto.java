@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 @EqualsAndHashCode(callSuper = false)
 @Data
 
-@Relation(collectionRelation = "planned_visits", itemRelation = "planned_visit")
+@Relation(collectionRelation = "plannedVisits", itemRelation = "plannedVisit")
 public class PlannedVisitDto extends RepresentationModel<PlannedVisitDto> {
 
     private Long id;

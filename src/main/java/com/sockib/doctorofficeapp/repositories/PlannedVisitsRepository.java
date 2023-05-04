@@ -21,6 +21,9 @@ public interface PlannedVisitsRepository extends JpaRepository<PlannedVisit, Lon
     @Query("SELECT v FROM PlannedVisit v INNER JOIN v.registeredDoctor d WHERE d.username = :username AND v.id = :id")
     Optional<PlannedVisit> findPlannedVisitByDoctorUsernameAndVisitId(String username, Long id);
 
+    @Query("SELECT v FROM PlannedVisit v INNER JOIN v.registeredClient c WHERE c.username = :username AND v.id = :id")
+    Optional<PlannedVisit> findPlannedVisitByClientUsernameAndVisitId(String username, Long id);
+
     @Query("SELECT v FROM PlannedVisit v INNER JOIN v.registeredDoctor d WHERE d.username = :username AND v.day = :day")
     List<PlannedVisit> findPlannedVisitsByDoctorUsernameAndDate(String username, LocalDateTime day);
 

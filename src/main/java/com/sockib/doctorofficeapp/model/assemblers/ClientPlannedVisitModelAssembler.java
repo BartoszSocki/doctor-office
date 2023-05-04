@@ -1,10 +1,7 @@
 package com.sockib.doctorofficeapp.model.assemblers;
 
-import com.sockib.doctorofficeapp.controllers.NotesController;
 import com.sockib.doctorofficeapp.controllers.PlannedVisitsController;
-import com.sockib.doctorofficeapp.entities.Note;
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
-import com.sockib.doctorofficeapp.model.dto.NoteDataDto;
 import com.sockib.doctorofficeapp.model.dto.PlannedVisitDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
@@ -15,11 +12,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class PlannedVisitsModelAssembler extends RepresentationModelAssemblerSupport<PlannedVisit, PlannedVisitDto> {
+public class ClientPlannedVisitModelAssembler extends RepresentationModelAssemblerSupport<PlannedVisit, PlannedVisitDto> {
 
     private final ModelMapper modelMapper;
 
-    public PlannedVisitsModelAssembler(ModelMapper modelMapper) {
+    public ClientPlannedVisitModelAssembler(ModelMapper modelMapper) {
         super(PlannedVisitsController.class, PlannedVisitDto.class);
         this.modelMapper = modelMapper;
     }
@@ -27,12 +24,12 @@ public class PlannedVisitsModelAssembler extends RepresentationModelAssemblerSup
     @Override
     public PlannedVisitDto toModel(PlannedVisit plannedVisit) {
         return modelMapper.map(plannedVisit, PlannedVisitDto.class)
-                .add(linkTo(methodOn(PlannedVisitsController.class).getClientPlannedVisits(plannedVisit.getId())).withSelfRel());
+                .add(linkTo(methodOn(PlannedVisitsController.class).getClientPlannedVisit(plannedVisit.getId())).withSelfRel());
     }
 
     @Override
-    public CollectionModel<NoteDataDto> toCollectionModel(Iterable<? extends Note> notes) {
-        return super.toCollectionModel(notes)
-                .add(linkTo(methodOn(NotesController.class).getDoctorNotes(null)).withSelfRel());
+    public CollectionModel<PlannedVisitDto> toCollectionModel(Iterable<? extends PlannedVisit> plannedVisits) {
+        return super.toCollectionModel(plannedVisits)
+                .add(linkTo(methodOn(PlannedVisitsController.class).getClientPlannedVisits(null)).withSelfRel());
     }
 }
