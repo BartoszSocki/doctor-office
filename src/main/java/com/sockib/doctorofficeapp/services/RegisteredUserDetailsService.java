@@ -1,5 +1,6 @@
 package com.sockib.doctorofficeapp.services;
 
+import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
 import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -17,6 +18,6 @@ public class RegisteredUserDetailsService implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
         return registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
     }
 }

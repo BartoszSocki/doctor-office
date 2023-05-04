@@ -62,8 +62,8 @@ public class RegistrationService {
         registeredUser.setRole(Role.CLIENT.value());
 
         var clientInfo = modelMapper.map(clientRegistrationDataDto, ClientInfo.class);
-        var persistedRegisteredUSer = registeredUserRepository.save(registeredUser);
-        clientInfo.setRegisteredUser(persistedRegisteredUSer);
+        var persistedRegisteredUser = registeredUserRepository.save(registeredUser);
+        clientInfo.setRegisteredUser(persistedRegisteredUser);
 
         clientInfoRepository.save(clientInfo);
 

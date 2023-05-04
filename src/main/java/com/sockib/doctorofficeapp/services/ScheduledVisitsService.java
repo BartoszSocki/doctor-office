@@ -2,6 +2,8 @@ package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
+import com.sockib.doctorofficeapp.exceptions.UnableToGetResourceException;
+import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
 import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
@@ -25,11 +27,7 @@ public class ScheduledVisitsService {
 
     public ScheduledVisit getScheduledVisit(Long visitId) {
         return scheduledVisitRepository.findById(visitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
-    }
-
-    public List<ScheduledVisit> getAllScheduledVisits(Long doctorId) {
-        return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(doctorId);
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate scheduledVisit " + visitId));
     }
 
     public List<ScheduledVisit> getEnabledScheduledVisits(Long doctorId) {
@@ -39,11 +37,7 @@ public class ScheduledVisitsService {
     @Transactional
     public void disableScheduledVisit(Long visitId, String username) {
         var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
-
-        if (scheduledVisit.getDisabled().equals(Boolean.FALSE)) {
-            throw new RuntimeException("TODO");
-        }
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate scheduledVisit " + visitId + " for " + username));
 
         scheduledVisit.setDisabled(true);
         scheduledVisitRepository.save(scheduledVisit);
@@ -52,7 +46,7 @@ public class ScheduledVisitsService {
     @Transactional
     public ScheduledVisit updateScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, Long visitId, String username) {
         var scheduledVisit = scheduledVisitRepository.findByIdAndDoctorUsername(visitId, username)
-                        .orElseThrow(() -> new RuntimeException("TODO"));
+                        .orElseThrow(() -> new UnableToGetResourceException("cannot locate scheduledVisit " + visitId + " for " + username));
 
         scheduledVisit.setVisitBegTime(scheduledVisitFormDto.getVisitBegTime());
         scheduledVisit.setVisitEndTime(scheduledVisitFormDto.getVisitEndTime());
@@ -68,7 +62,7 @@ public class ScheduledVisitsService {
 
     public ScheduledVisit createScheduledVisit(ScheduledVisitFormDto scheduledVisitFormDto, String username) {
         var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var scheduledVisit = modelMapper.map(scheduledVisitFormDto, ScheduledVisit.class);
 
