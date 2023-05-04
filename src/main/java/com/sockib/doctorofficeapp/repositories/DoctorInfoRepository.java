@@ -11,4 +11,7 @@ public interface DoctorInfoRepository extends JpaRepository<DoctorInfo, Long> {
     @Query("SELECT i FROM DoctorInfo i INNER JOIN i.registeredUser u WHERE u.username = :username")
     Optional<DoctorInfo> findDoctorInfoByUsername(String username);
 
+    @Query("SELECT i FROM DoctorInfo i INNER JOIN i.registeredUser u WHERE u.id = :id")
+    Optional<DoctorInfo> findDoctorInfoById(Long id);
+
 }

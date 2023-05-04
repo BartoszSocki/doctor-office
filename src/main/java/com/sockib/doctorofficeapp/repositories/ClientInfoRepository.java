@@ -11,4 +11,7 @@ public interface ClientInfoRepository extends JpaRepository<ClientInfo, Long> {
     @Query("SELECT i FROM ClientInfo i INNER JOIN i.registeredUser u WHERE u.username = :username")
     Optional<ClientInfo> findClientInfoByUsername(String username);
 
+    @Query("SELECT i FROM ClientInfo i INNER JOIN i.registeredUser u WHERE u.id = :id")
+    Optional<ClientInfo> findClientInfoById(Long id);
+
 }

@@ -1,5 +1,6 @@
 package com.sockib.doctorofficeapp.model.dto;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
@@ -12,6 +13,8 @@ public class ClientPublicInfoDto extends RepresentationModel<ClientPublicInfoDto
 
     private Long id;
     private LocalDate dateOfBirth;
+
+    @JsonProperty("publicInfo")
     private UserPublicInfoDto userPublicInfoDto;
 
 }

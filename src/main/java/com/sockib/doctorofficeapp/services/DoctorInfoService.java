@@ -27,12 +27,8 @@ public class DoctorInfoService {
     public DoctorInfo getDoctorInfo(Long id) {
         log.trace("getting doctor info by id: " + id);
 
-        return doctorInfoRepository.findById(id)
+        return doctorInfoRepository.findDoctorInfoById(id)
                 .orElseThrow(() -> new RuntimeException("TODO"));
-    }
-
-    public Long getDoctorRegisteredUserId(String username) {
-        return this.getDoctorInfo(username).getRegisteredUser().getId();
     }
 
 }

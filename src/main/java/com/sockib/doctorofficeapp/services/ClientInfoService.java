@@ -25,7 +25,7 @@ public class ClientInfoService {
     public ClientInfo getClientInfo(Long id) {
         log.trace("getting client info by id: " + id);
 
-        return clientInfoRepository.findById(id)
+        return clientInfoRepository.findClientInfoById(id)
                 .orElseThrow(() -> new RuntimeException("TODO"));
     }
 
