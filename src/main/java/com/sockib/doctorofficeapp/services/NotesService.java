@@ -1,6 +1,8 @@
 package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.Note;
+import com.sockib.doctorofficeapp.exceptions.UnableToGetResourceException;
+import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
 import com.sockib.doctorofficeapp.model.dto.NoteDataFormDto;
 import com.sockib.doctorofficeapp.repositories.NotesRepository;
 import com.sockib.doctorofficeapp.repositories.PlannedVisitsRepository;
@@ -9,7 +11,6 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -26,7 +27,7 @@ public class NotesService {
 
     public Note getNote(String username, Long noteId) {
         return notesRepository.findNoteByDoctorUsernameAndId(username, noteId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate note " + noteId + " for " + username));
     }
 
     public Page<Note> getNotesByDoctorId(String username, Pageable pageable) {
@@ -34,8 +35,9 @@ public class NotesService {
     }
 
     public Note editNote(String username, Long noteId, Optional<NoteDataFormDto> optionalNoteDataFormDto) {
-        var noteDataFormDto = optionalNoteDataFormDto.orElseThrow(() -> new RuntimeException("TODO"));
-        var note = this.getNote(username, noteId);
+        var noteDataFormDto = optionalNoteDataFormDto
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate note " + noteId + " for " + username));
+        var note = getNote(username, noteId);
 
         note.setName(noteDataFormDto.getName());
         note.setContent((noteDataFormDto.getContent()));
@@ -45,17 +47,17 @@ public class NotesService {
 
     public void deleteNote(String username, Long noteId) {
         var note = notesRepository.findNoteByDoctorUsernameAndId(username, noteId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate note " + noteId + " for " + username));
 
         notesRepository.delete(note);
     }
 
     public Note createNote(String username, Long plannedVisitId, NoteDataFormDto noteDataFormDto) {
         var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, plannedVisitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + plannedVisitId + " for " + username));
 
         var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var note = modelMapper.map(noteDataFormDto, Note.class);
         note.setRegisteredDoctor(registeredDoctor);

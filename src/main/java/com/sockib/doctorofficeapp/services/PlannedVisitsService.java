@@ -1,18 +1,22 @@
 package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
-import com.sockib.doctorofficeapp.repositories.*;
+import com.sockib.doctorofficeapp.exceptions.PlannedVisitAlreadyTakenException;
+import com.sockib.doctorofficeapp.exceptions.UnableToGetResourceException;
+import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
+import com.sockib.doctorofficeapp.repositories.PlannedVisitsRepository;
+import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
+import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.ResourceAccessException;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
-import java.util.Optional;
 
 @AllArgsConstructor
 
@@ -27,33 +31,33 @@ public class PlannedVisitsService {
 
     public Page<PlannedVisit> getClientPlannedVisits(String username, Pageable pageable) {
         var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
         return plannedVisitsRepository.findPlannedVisitsByClientId(registeredClient.getId(), pageable);
     }
 
     public PlannedVisit getClientPlannedVisit(String username, Long visitId) {
         return plannedVisitsRepository.findPlannedVisitByClientUsernameAndVisitId(username, visitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId + " for user " + username));
     }
 
     public Page<PlannedVisit> getDoctorPlannedVisits(String username, Pageable pageable) {
         var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
         return plannedVisitsRepository.findPlannedVisitsByDoctorId(registeredDoctor.getId(), pageable);
     }
 
     public PlannedVisit getDoctorPlannedVisit(String username, Long visitId) {
         return plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId + " for user " + username));
     }
 
     // TODO check if date matches day
     public PlannedVisit requestPlannedVisit(String username, Long scheduledVisitId, LocalDate date) {
         var scheduledVisit = scheduledVisitsRepository.findById(scheduledVisitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate scheduledVisit " + scheduledVisitId));
 
         var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var registeredDoctor = scheduledVisit.getRegisteredDoctor();
 
@@ -64,7 +68,7 @@ public class PlannedVisitsService {
                 .anyMatch(v -> !v.isCancelled());
 
         if (isTaken) {
-            throw new RuntimeException("TODO");
+            throw new PlannedVisitAlreadyTakenException("visit already taken");
         }
 
         var plannedVisit = new PlannedVisit();
@@ -79,10 +83,10 @@ public class PlannedVisitsService {
     @Transactional
     public void cancelDoctorPlannedVisit(Long visitId, String username) {
         var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId));
 
         cancelVisit(plannedVisit);
 
@@ -97,10 +101,10 @@ public class PlannedVisitsService {
     @Transactional
     public void cancelClientPlannedVisit(Long visitId, String username) {
         var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId));
 
         cancelVisit(plannedVisit);
         var doctorEmail = plannedVisit.getRegisteredDoctor().getUsername();

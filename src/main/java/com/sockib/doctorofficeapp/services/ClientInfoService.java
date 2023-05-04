@@ -1,6 +1,7 @@
 package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.ClientInfo;
+import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
 import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -19,14 +20,14 @@ public class ClientInfoService {
         log.trace("getting client info by username: " + username);
 
         return clientInfoRepository.findClientInfoByUsername(username)
-                .orElseThrow(() -> new UsernameNotFoundException(username));
+                .orElseThrow(() -> new UserNotFoundException("username: " + username));
     }
 
     public ClientInfo getClientInfo(Long id) {
         log.trace("getting client info by id: " + id);
 
         return clientInfoRepository.findClientInfoById(id)
-                .orElseThrow(() -> new RuntimeException("TODO"));
+                .orElseThrow(() -> new UserNotFoundException("id: " + id));
     }
 
 }
