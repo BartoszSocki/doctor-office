@@ -88,8 +88,11 @@ public class PlannedVisitsService {
         var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
                 .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId));
 
-        cancelVisit(plannedVisit);
+        if (plannedVisit.isCancelled()) {
+            return;
+        }
 
+        cancelVisit(plannedVisit);
         var clientEmail = plannedVisit.getRegisteredClient().getUsername();
         var doctorName = registeredDoctor.getName();
         var doctorSurname = registeredDoctor.getSurname();
@@ -103,8 +106,12 @@ public class PlannedVisitsService {
         var registeredClient = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
-        var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
+        var plannedVisit = plannedVisitsRepository.findPlannedVisitByClientUsernameAndVisitId(username, visitId)
                 .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId));
+
+        if (plannedVisit.isCancelled()) {
+            return;
+        }
 
         cancelVisit(plannedVisit);
         var doctorEmail = plannedVisit.getRegisteredDoctor().getUsername();

@@ -1,12 +1,10 @@
 package com.sockib.doctorofficeapp.services;
 
-import lombok.AllArgsConstructor;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Profile;
 import org.springframework.core.env.Environment;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
-import org.springframework.stereotype.Component;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Profile("prod")
@@ -24,6 +22,7 @@ public class MailService {
         this.from = env.getProperty("spring.mail.username");
     }
 
+    @Async
     public void sendMail(String to, String subject, String message) {
         SimpleMailMessage mailMessage = new SimpleMailMessage();
 
