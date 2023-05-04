@@ -30,7 +30,6 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 public class NotesController {
 
     private NotesService notesService;
-    private ModelMapper modelMapper;
     private PagedResourcesAssembler<Note> pagedResourcesAssembler;
     private NoteModelAssembler noteModelAssembler;
 
@@ -38,12 +37,8 @@ public class NotesController {
     public ResponseEntity<PagedModel<NoteDataDto>> getDoctorNotes(Pageable pageable) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var page = notesService.getNotesByDoctorId(authentication.getName(), pageable);
-//                .map(n -> modelMapper.map(n, NoteDataDto.class));
-//                .map(n -> n.add(linkTo(methodOn(NotesController.class).getNote(n.getId(), principal)).withSelfRel()));
-
         var collectionModel = pagedResourcesAssembler.toModel(page, noteModelAssembler);
 
-//        return ResponseEntity.ok(page);
         return ResponseEntity.ok(collectionModel);
     }
 
@@ -51,8 +46,7 @@ public class NotesController {
     public ResponseEntity<NoteDataDto> getNote(@PathVariable Long noteId) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var note = notesService.getNote(authentication.getName(), noteId);
-        var noteDataDto = modelMapper.map(note, NoteDataDto.class)
-                .add(linkTo(methodOn(NotesController.class).getNote(noteId)).withSelfRel());
+        var noteDataDto = noteModelAssembler.toModel(note);
 
         return ResponseEntity.ok(noteDataDto);
     }
@@ -63,8 +57,7 @@ public class NotesController {
                                                 @RequestBody Optional<NoteDataFormDto> optionalNoteDataFormDto,
                                                 Principal principal) {
         var note = notesService.editNote(principal.getName(), noteId, optionalNoteDataFormDto);
-        var noteDataDto = modelMapper.map(note, NoteDataDto.class)
-                .add(linkTo(methodOn(NotesController.class).getNote(noteId)).withSelfRel());
+        var noteDataDto = noteModelAssembler.toModel(note);
 
         return ResponseEntity.ok(noteDataDto);
     }
@@ -73,8 +66,7 @@ public class NotesController {
     public ResponseEntity<NoteDataDto> createNote(@PathVariable Long plannedVisitId,
                                                   @RequestBody NoteDataFormDto noteDataFormDto, Principal principal) {
         var note = notesService.createNote(principal.getName(), plannedVisitId, noteDataFormDto);
-        var noteDataDto = modelMapper.map(note, NoteDataDto.class)
-                .add(linkTo(methodOn(NotesController.class).getNote(note.getId())).withSelfRel());
+        var noteDataDto = noteModelAssembler.toModel(note);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(noteDataDto);
     }

@@ -1,15 +1,11 @@
 package com.sockib.doctorofficeapp.controllers;
 
-import com.sockib.doctorofficeapp.entities.ClientInfo;
 import com.sockib.doctorofficeapp.model.dto.ClientPrivateInfoDto;
-import com.sockib.doctorofficeapp.model.dto.ClientPublicInfoDto;
-import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
 import com.sockib.doctorofficeapp.services.ClientInfoService;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,10 +28,9 @@ public class ClientInfoController {
     @GetMapping(path = "/info")
     public ResponseEntity<ClientPrivateInfoDto> privateClientInfo(Principal principal) {
         var clientInfo = clientInfoService.getClientInfo(principal.getName());
-        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class);
-
-        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).privateClientInfo(principal)).withSelfRel());
-        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(clientInfo.getId())).withRel("publicClientInfo"));
+        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class)
+                .add(linkTo(methodOn(ClientInfoController.class).privateClientInfo(principal)).withSelfRel())
+                .add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(clientInfo.getId())).withRel("publicClientInfo"));
 
         return ResponseEntity.ok(clientInfoDto);
     }
@@ -43,9 +38,8 @@ public class ClientInfoController {
     @GetMapping(path = "/{clientId}/info")
     public ResponseEntity<ClientPrivateInfoDto> publicClientInfo(@PathVariable Long clientId) {
         var clientInfo = clientInfoService.getClientInfo(clientId);
-        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class);
-
-        clientInfoDto.add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(clientId)).withSelfRel());
+        var clientInfoDto = modelMapper.map(clientInfo, ClientPrivateInfoDto.class)
+                .add(linkTo(methodOn(ClientInfoController.class).publicClientInfo(clientId)).withSelfRel());
 
         return ResponseEntity.ok(clientInfoDto);
     }

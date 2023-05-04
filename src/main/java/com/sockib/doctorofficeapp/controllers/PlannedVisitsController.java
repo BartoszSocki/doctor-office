@@ -1,14 +1,11 @@
 package com.sockib.doctorofficeapp.controllers;
 
-import com.sockib.doctorofficeapp.entities.Note;
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
 import com.sockib.doctorofficeapp.model.assemblers.ClientPlannedVisitModelAssembler;
-import com.sockib.doctorofficeapp.model.assemblers.NoteModelAssembler;
+import com.sockib.doctorofficeapp.model.assemblers.DoctorPlannedVisitModelAssembler;
 import com.sockib.doctorofficeapp.model.dto.PlannedVisitDto;
 import com.sockib.doctorofficeapp.services.PlannedVisitsService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
@@ -27,9 +24,10 @@ import java.time.LocalDate;
 public class PlannedVisitsController {
 
     private PlannedVisitsService plannedVisitsService;
-    private ModelMapper modelMapper;
+//    private ModelMapper modelMapper;
     private PagedResourcesAssembler<PlannedVisit> pagedResourcesAssembler;
     private ClientPlannedVisitModelAssembler clientPlannedVisitModelAssembler;
+    private DoctorPlannedVisitModelAssembler doctorPlannedVisitModelAssembler;
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/client/planned-visits")
@@ -53,12 +51,12 @@ public class PlannedVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping(path = "/doctor/planned-visits")
-    public ResponseEntity<Page<PlannedVisitDto>> getDoctorPlannedVisits(Pageable pageable) {
+    public ResponseEntity<PagedModel<PlannedVisitDto>> getDoctorPlannedVisits(Pageable pageable) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(authentication.getName(), pageable)
-                .map(v -> modelMapper.map(v, PlannedVisitDto.class));
+        var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(authentication.getName(), pageable);
+        var collectionModel = pagedResourcesAssembler.toModel(plannedVisits, doctorPlannedVisitModelAssembler);
 
-        return ResponseEntity.ok(plannedVisits);
+        return ResponseEntity.ok(collectionModel);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
@@ -77,7 +75,7 @@ public class PlannedVisitsController {
                                                                @RequestParam(name = "date") LocalDate date) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var plannedVisit = plannedVisitsService.requestPlannedVisit(authentication.getName(), scheduledVisitId, date);
-        var plannedVisitDto = modelMapper.map(plannedVisit, PlannedVisitDto.class);
+        var plannedVisitDto = clientPlannedVisitModelAssembler.toModel(plannedVisit);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(plannedVisitDto);
     }

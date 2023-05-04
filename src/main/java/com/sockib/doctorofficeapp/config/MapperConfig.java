@@ -42,8 +42,6 @@ public class MapperConfig {
         infoMapper.addMappings(mapper -> mapper.map(src ->
                 src.getRegisteredUser().getUsername(), ClientPrivateInfoDto::setUsername));
         infoMapper.addMappings(mapper -> mapper.map(src ->
-                src.getRegisteredUser().getPassword(), ClientPrivateInfoDto::setPassword));
-        infoMapper.addMappings(mapper -> mapper.map(src ->
                 src.getRegisteredUser().getName(), ClientPrivateInfoDto::setName));
         infoMapper.addMappings(mapper -> mapper.map(src ->
                 src.getRegisteredUser().getSurname(), ClientPrivateInfoDto::setSurname));
@@ -51,8 +49,6 @@ public class MapperConfig {
                 src.getRegisteredUser().getGender(), ClientPrivateInfoDto::setGender));
         infoMapper.addMappings(mapper -> mapper.map(src ->
                 src.getRegisteredUser().getMobile(), ClientPrivateInfoDto::setMobile));
-        infoMapper.addMappings(mapper -> mapper.map(src ->
-                src.getRegisteredUser().getVerified(), ClientPrivateInfoDto::setVerified));
 
         return infoMapper;
     }

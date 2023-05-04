@@ -30,10 +30,9 @@ public class DoctorInfoController {
     @GetMapping(path = "/info")
     public ResponseEntity<DoctorPrivateInfoDto> privateDoctorInfo(Principal principal) {
         var doctorInfo = doctorInfoService.getDoctorInfo(principal.getName());
-        var doctorInfoDto = modelMapper.map(doctorInfo, DoctorPrivateInfoDto.class);
-
-        doctorInfoDto.add(linkTo(methodOn(DoctorInfoController.class).privateDoctorInfo(principal)).withSelfRel());
-        doctorInfoDto.add(linkTo(methodOn(DoctorInfoController.class).publicDoctorInfo(doctorInfo.getId())).withRel("publicDoctorInfo"));
+        var doctorInfoDto = modelMapper.map(doctorInfo, DoctorPrivateInfoDto.class)
+                .add(linkTo(methodOn(DoctorInfoController.class).privateDoctorInfo(principal)).withSelfRel())
+                .add(linkTo(methodOn(DoctorInfoController.class).publicDoctorInfo(doctorInfo.getId())).withRel("publicDoctorInfo"));
 
         return ResponseEntity.ok(doctorInfoDto);
     }
@@ -41,9 +40,8 @@ public class DoctorInfoController {
     @GetMapping(path = "/{doctorId}/info")
     public ResponseEntity<DoctorPublicInfoDto> publicDoctorInfo(@PathVariable Long doctorId) {
         var doctorInfo = doctorInfoService.getDoctorInfo(doctorId);
-        var doctorInfoDto = modelMapper.map(doctorInfo, DoctorPublicInfoDto.class);
-
-        doctorInfoDto.add(linkTo(methodOn(DoctorInfoController.class).publicDoctorInfo(doctorId)).withSelfRel());
+        var doctorInfoDto = modelMapper.map(doctorInfo, DoctorPublicInfoDto.class)
+                .add(linkTo(methodOn(DoctorInfoController.class).publicDoctorInfo(doctorId)).withSelfRel());
 
         return ResponseEntity.ok(doctorInfoDto);
     }

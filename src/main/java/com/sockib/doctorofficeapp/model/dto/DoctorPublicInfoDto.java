@@ -1,6 +1,5 @@
 package com.sockib.doctorofficeapp.model.dto;
 
-import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
@@ -10,6 +9,8 @@ import org.springframework.hateoas.RepresentationModel;
 public class DoctorPublicInfoDto extends RepresentationModel<DoctorPublicInfoDto> {
 
     private String specialization;
-    private RegisteredUser registeredUser;
-
+    private Long id;
+    private String name;
+    private String surname;
+    private String gender;
 }
