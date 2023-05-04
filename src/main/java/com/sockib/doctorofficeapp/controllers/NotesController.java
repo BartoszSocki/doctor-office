@@ -1,5 +1,7 @@
 package com.sockib.doctorofficeapp.controllers;
 
+import com.sockib.doctorofficeapp.entities.Note;
+import com.sockib.doctorofficeapp.model.assemblers.NoteModelAssembler;
 import com.sockib.doctorofficeapp.model.dto.NoteDataDto;
 import com.sockib.doctorofficeapp.model.dto.NoteDataFormDto;
 import com.sockib.doctorofficeapp.services.NotesService;
@@ -7,9 +9,13 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PagedResourcesAssembler;
+import org.springframework.hateoas.EntityModel;
+import org.springframework.hateoas.PagedModel;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -27,22 +33,28 @@ public class NotesController {
 
     private NotesService notesService;
     private ModelMapper modelMapper;
-    
+    private PagedResourcesAssembler<Note> pagedResourcesAssembler;
+    private NoteModelAssembler noteModelAssembler;
 
     @GetMapping
-    public ResponseEntity<Page<NoteDataDto>> getDoctorNotes(Pageable pageable, Principal principal) {
-        var page = notesService.getNotesByDoctorId(principal.getName(), pageable)
-                .map(n -> modelMapper.map(n, NoteDataDto.class))
-                .map(n -> n.add(linkTo(methodOn(NotesController.class).getNote(n.getId(), principal)).withSelfRel()));
+    public ResponseEntity<PagedModel<NoteDataDto>> getDoctorNotes(Pageable pageable) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var page = notesService.getNotesByDoctorId(authentication.getName(), pageable);
+//                .map(n -> modelMapper.map(n, NoteDataDto.class));
+//                .map(n -> n.add(linkTo(methodOn(NotesController.class).getNote(n.getId(), principal)).withSelfRel()));
 
-        return ResponseEntity.ok(page);
+        var collectionModel = pagedResourcesAssembler.toModel(page, noteModelAssembler);
+
+//        return ResponseEntity.ok(page);
+        return ResponseEntity.ok(collectionModel);
     }
 
     @GetMapping(path = "/{noteId}")
-    public ResponseEntity<NoteDataDto> getNote(@PathVariable Long noteId, Principal principal) {
-        var note = notesService.getNote(principal.getName(), noteId);
+    public ResponseEntity<NoteDataDto> getNote(@PathVariable Long noteId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var note = notesService.getNote(authentication.getName(), noteId);
         var noteDataDto = modelMapper.map(note, NoteDataDto.class)
-                .add(linkTo(methodOn(NotesController.class).getNote(noteId, principal)).withSelfRel());
+                .add(linkTo(methodOn(NotesController.class).getNote(noteId)).withSelfRel());
 
         return ResponseEntity.ok(noteDataDto);
     }
@@ -54,7 +66,7 @@ public class NotesController {
                                                 Principal principal) {
         var note = notesService.editNote(principal.getName(), noteId, optionalNoteDataFormDto);
         var noteDataDto = modelMapper.map(note, NoteDataDto.class)
-                .add(linkTo(methodOn(NotesController.class).getNote(noteId, principal)).withSelfRel());
+                .add(linkTo(methodOn(NotesController.class).getNote(noteId)).withSelfRel());
 
         return ResponseEntity.ok(noteDataDto);
     }
@@ -64,7 +76,7 @@ public class NotesController {
                                                   @RequestBody NoteDataFormDto noteDataFormDto, Principal principal) {
         var note = notesService.createNote(principal.getName(), plannedVisitId, noteDataFormDto);
         var noteDataDto = modelMapper.map(note, NoteDataDto.class)
-                .add(linkTo(methodOn(NotesController.class).getNote(note.getId(), principal)).withSelfRel());
+                .add(linkTo(methodOn(NotesController.class).getNote(note.getId())).withSelfRel());
 
         return ResponseEntity.status(HttpStatus.CREATED).body(noteDataDto);
     }
