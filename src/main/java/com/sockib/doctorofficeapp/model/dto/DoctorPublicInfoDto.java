@@ -10,7 +10,6 @@ public class DoctorPublicInfoDto extends RepresentationModel<DoctorPublicInfoDto
 
     private String specialization;
     private Long id;
-    private String name;
-    private String surname;
-    private String gender;
+    private UserPublicInfoDto userPublicInfoDto;
+
 }

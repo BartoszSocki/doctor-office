@@ -12,9 +12,6 @@ public class ClientPrivateInfoDto extends RepresentationModel<ClientPrivateInfoD
 
     private Long id;
     private LocalDate dateOfBirth;
-    private String username;
-    private String name;
-    private String surname;
-    private String gender;
-    private String mobile;
+    private UserPrivateInfoDto userPrivateInfoDto;
+
 }

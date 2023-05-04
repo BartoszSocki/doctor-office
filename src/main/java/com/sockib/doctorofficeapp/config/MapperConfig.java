@@ -20,38 +20,23 @@ public class MapperConfig {
     }
 
 //    @Bean
-//    public TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitToPlannedVisitDtoTypeMap(ModelMapper modelMapper) {
-//        TypeMap<PlannedVisit, PlannedVisitDto> plannedVisitMapper =
-//                modelMapper.createTypeMap(PlannedVisit.class, PlannedVisitDto.class);
+//    public TypeMap<ClientInfo, ClientPrivateInfoDto> clientInfoClientPrivateInfoDtoTypeMap(ModelMapper modelMapper) {
+//        TypeMap<ClientInfo, ClientPrivateInfoDto> infoMapper =
+//                modelMapper.createTypeMap(ClientInfo.class, ClientPrivateInfoDto.class);
 //
-//        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
-//                src.getRegisteredUser().getId(),PlannedVisitDto::setRegisteredClientId));
-//        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
-//                src.getRegisteredDoctor().getId(),PlannedVisitDto::setRegisteredDoctorId));
-//        plannedVisitMapper.addMappings(mapper ->mapper.map(src ->
-//                src.getScheduledVisit().getId(),PlannedVisitDto::setScheduledVisitId));
+//        infoMapper.addMappings(mapper -> mapper.map(src ->
+//                src.getRegisteredUser().getUsername(), ClientPrivateInfoDto::setUsername));
+//        infoMapper.addMappings(mapper -> mapper.map(src ->
+//                src.getRegisteredUser().getName(), ClientPrivateInfoDto::setName));
+//        infoMapper.addMappings(mapper -> mapper.map(src ->
+//                src.getRegisteredUser().getSurname(), ClientPrivateInfoDto::setSurname));
+//        infoMapper.addMappings(mapper -> mapper.map(src ->
+//                src.getRegisteredUser().getGender(), ClientPrivateInfoDto::setGender));
+//        infoMapper.addMappings(mapper -> mapper.map(src ->
+//                src.getRegisteredUser().getMobile(), ClientPrivateInfoDto::setMobile));
 //
-//        return plannedVisitMapper;
+//        return infoMapper;
 //    }
-
-    @Bean
-    public TypeMap<ClientInfo, ClientPrivateInfoDto> clientInfoClientPrivateInfoDtoTypeMap(ModelMapper modelMapper) {
-        TypeMap<ClientInfo, ClientPrivateInfoDto> infoMapper =
-                modelMapper.createTypeMap(ClientInfo.class, ClientPrivateInfoDto.class);
-
-        infoMapper.addMappings(mapper -> mapper.map(src ->
-                src.getRegisteredUser().getUsername(), ClientPrivateInfoDto::setUsername));
-        infoMapper.addMappings(mapper -> mapper.map(src ->
-                src.getRegisteredUser().getName(), ClientPrivateInfoDto::setName));
-        infoMapper.addMappings(mapper -> mapper.map(src ->
-                src.getRegisteredUser().getSurname(), ClientPrivateInfoDto::setSurname));
-        infoMapper.addMappings(mapper -> mapper.map(src ->
-                src.getRegisteredUser().getGender(), ClientPrivateInfoDto::setGender));
-        infoMapper.addMappings(mapper -> mapper.map(src ->
-                src.getRegisteredUser().getMobile(), ClientPrivateInfoDto::setMobile));
-
-        return infoMapper;
-    }
 
     @Bean
     public TypeMap<ScheduledVisit, ScheduledVisitDto> scheduledVisitToScheduledVisitDtoTypeMap(ModelMapper modelMapper) {
