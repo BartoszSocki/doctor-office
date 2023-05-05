@@ -1,7 +1,6 @@
 package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.repositories.PlannedVisitsRepository;
-import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -17,9 +16,9 @@ import java.time.temporal.ChronoUnit;
 @Service
 public class NotificationService {
 
-    private MailService mailService;
-    private PlannedVisitsRepository plannedVisitsRepository;
-    private ThreadPoolTaskScheduler taskScheduler;
+    private final MailService mailService;
+    private final PlannedVisitsRepository plannedVisitsRepository;
+    private final ThreadPoolTaskScheduler taskScheduler;
 
     public NotificationService(MailService mailService, PlannedVisitsRepository plannedVisitsRepository, @Qualifier("threadPoolTaskScheduler") ThreadPoolTaskScheduler taskScheduler) {
         this.mailService = mailService;
