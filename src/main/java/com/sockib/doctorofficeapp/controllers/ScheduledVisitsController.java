@@ -1,5 +1,6 @@
 package com.sockib.doctorofficeapp.controllers;
 
+import com.nimbusds.jose.proc.SecurityContext;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitDto;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.services.ScheduledVisitsService;
@@ -10,6 +11,7 @@ import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -39,9 +41,9 @@ public class ScheduledVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @PostMapping(path = "/scheduled-visits")
-    public ResponseEntity<ScheduledVisitDto> addVisit(@RequestBody ScheduledVisitFormDto scheduledVisitFormDto,
-                                                      Principal principal) {
-        var scheduledVisit = scheduledVisitsService.createScheduledVisit(scheduledVisitFormDto, principal.getName());
+    public ResponseEntity<ScheduledVisitDto> addVisit(@RequestBody ScheduledVisitFormDto scheduledVisitFormDto) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var scheduledVisit = scheduledVisitsService.createScheduledVisit(scheduledVisitFormDto, authentication.getName());
         var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class)
                 .add(linkTo(methodOn(ScheduledVisitsController.class)
                 .getVisit(scheduledVisit.getId()))
@@ -52,8 +54,9 @@ public class ScheduledVisitsController {
 
     @PreAuthorize("hasRole('DOCTOR')")
     @DeleteMapping(path = "/scheduled-visits/{visitId}")
-    public ResponseEntity<?> removeVisit(@PathVariable Long visitId, Principal principal) {
-        scheduledVisitsService.disableScheduledVisit(visitId, principal.getName());
+    public ResponseEntity<?> removeVisit(@PathVariable Long visitId) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        scheduledVisitsService.disableScheduledVisit(visitId, authentication.getName());
         return ResponseEntity.noContent().build();
     }
 
@@ -61,9 +64,9 @@ public class ScheduledVisitsController {
     @PreAuthorize("hasRole('DOCTOR')")
     @PutMapping(path = "/scheduled-visits/{visitId}")
     public ResponseEntity<ScheduledVisitDto> updateVisit(@PathVariable Long visitId,
-                                                         @RequestBody ScheduledVisitFormDto scheduledVisitFormDto,
-                                                         Principal principal) {
-        var scheduledVisit = scheduledVisitsService.updateScheduledVisit(scheduledVisitFormDto, visitId, principal.getName());
+                                                         @RequestBody ScheduledVisitFormDto scheduledVisitFormDto) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var scheduledVisit = scheduledVisitsService.updateScheduledVisit(scheduledVisitFormDto, visitId, authentication.getName());
         var scheduledVisitDto = modelMapper.map(scheduledVisit, ScheduledVisitDto.class)
                 .add(linkTo(methodOn(ScheduledVisitsController.class).getVisit(visitId)).withSelfRel());
 
