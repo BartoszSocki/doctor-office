@@ -39,7 +39,7 @@ public class RegisteredUser implements UserDetails {
     // TODO enumerated
     private String gender;
     private String mobile;
-    private Boolean verified;
+    private Boolean verified = false;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {

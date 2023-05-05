@@ -32,8 +32,7 @@ public class ScheduledVisitModelAssembler extends RepresentationModelAssemblerSu
 
     @Override
     public CollectionModel<ScheduledVisitDto> toCollectionModel(Iterable<? extends ScheduledVisit> scheduledVisits) {
-        return super.toCollectionModel(scheduledVisits)
-                .add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(null)).withSelfRel());
+        return super.toCollectionModel(scheduledVisits);
     }
 }
 

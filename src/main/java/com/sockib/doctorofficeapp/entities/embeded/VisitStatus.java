@@ -12,9 +12,9 @@ public class VisitStatus {
     private Boolean canceled;
 
     @Column(name = "was_mail_send")
-    private Boolean wasMailSend;
+    private Boolean wasMailSend = false;
 
     @Column(name = "is_mail_scheduled")
-    private Boolean isMailScheduled;
+    private Boolean isMailScheduled = false;
 
 }

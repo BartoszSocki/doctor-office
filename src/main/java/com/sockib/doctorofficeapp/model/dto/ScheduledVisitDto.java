@@ -4,11 +4,14 @@ import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import lombok.Data;
 import lombok.EqualsAndHashCode;
 import org.springframework.hateoas.RepresentationModel;
+import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalTime;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
+
+@Relation(collectionRelation = "scheduledVisits", itemRelation = "scheduledVisit")
 public class ScheduledVisitDto extends RepresentationModel<ScheduledVisitDto> {
 
     private Long id;

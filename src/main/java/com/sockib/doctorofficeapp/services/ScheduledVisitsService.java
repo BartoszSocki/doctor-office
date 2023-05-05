@@ -31,7 +31,8 @@ public class ScheduledVisitsService {
     }
 
     public List<ScheduledVisit> getEnabledScheduledVisits(Long doctorId) {
-        return scheduledVisitRepository.findEnabledScheduledVisitsByDoctorId(doctorId);
+//        return scheduledVisitRepository.findEnabledScheduledVisitsByDoctorId(doctorId);
+        return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(doctorId);
     }
 
     @Transactional
@@ -67,12 +68,12 @@ public class ScheduledVisitsService {
                 .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var scheduledVisit = modelMapper.map(scheduledVisitFormDto, ScheduledVisit.class);
-        var address = modelMapper.map(scheduledVisitFormDto, Address.class);
+        //var address = modelMapper.map(scheduledVisitFormDto, Address.class);
 
 //         TODO needs validation
-        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
+//        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
         scheduledVisit.setRegisteredDoctor(registeredDoctor);
-        scheduledVisit.setAddress(address);
+        //scheduledVisit.setAddress(address);
 
         return scheduledVisitRepository.save(scheduledVisit);
     }

@@ -4,6 +4,7 @@ import com.sockib.doctorofficeapp.entities.embeded.Address;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import jakarta.persistence.*;
 import lombok.*;
+import org.hibernate.annotations.ColumnDefault;
 
 import java.time.LocalTime;
 
@@ -34,7 +35,7 @@ public class ScheduledVisit {
     private Address address;
 
     private String type;
-    private Boolean disabled;
+    private Boolean disabled = false;
 
     @ManyToOne
     @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "pk_id")
