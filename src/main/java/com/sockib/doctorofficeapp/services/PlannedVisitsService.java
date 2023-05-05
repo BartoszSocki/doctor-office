@@ -64,7 +64,7 @@ public class PlannedVisitsService {
         var day = LocalDateTime.of(date, time);
 
         var isTaken = plannedVisitsRepository.findPlannedVisitsByDoctorUsernameAndDate(registeredDoctor.getUsername(), day).stream()
-                .anyMatch(v -> !v.isCancelled());
+                .anyMatch(v -> !v.getVisitStatus().getCanceled());
 
         if (isTaken) {
             throw new PlannedVisitAlreadyTakenException("visit already taken");
@@ -87,7 +87,7 @@ public class PlannedVisitsService {
         var plannedVisit = plannedVisitsRepository.findPlannedVisitByDoctorUsernameAndVisitId(username, visitId)
                 .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId));
 
-        if (plannedVisit.isCancelled()) {
+        if (plannedVisit.getVisitStatus().getCanceled()) {
             return;
         }
 
@@ -108,7 +108,7 @@ public class PlannedVisitsService {
         var plannedVisit = plannedVisitsRepository.findPlannedVisitByClientUsernameAndVisitId(username, visitId)
                 .orElseThrow(() -> new UnableToGetResourceException("cannot locate plannedVisit " + visitId));
 
-        if (plannedVisit.isCancelled()) {
+        if (plannedVisit.getVisitStatus().getCanceled()) {
             return;
         }
 
@@ -123,7 +123,7 @@ public class PlannedVisitsService {
     }
 
     private void cancelVisit(PlannedVisit plannedVisit) {
-        plannedVisit.setCancelled(true);
+        plannedVisit.getVisitStatus().setCanceled(true);
         plannedVisitsRepository.save(plannedVisit);
     }
 

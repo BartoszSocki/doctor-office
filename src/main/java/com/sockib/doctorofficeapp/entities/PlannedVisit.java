@@ -1,5 +1,6 @@
 package com.sockib.doctorofficeapp.entities;
 
+import com.sockib.doctorofficeapp.entities.embeded.VisitStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -18,17 +19,19 @@ public class PlannedVisit {
 
     @Column(name = "visit_day")
     private LocalDateTime day;
-    private boolean cancelled;
 
-    @ManyToOne
+    @Embedded
+    private VisitStatus visitStatus;
+
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "pk_id")
     private RegisteredUser registeredDoctor;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_registered_client_id", referencedColumnName = "pk_id")
     private RegisteredUser registeredClient;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "fk_scheduled_visit_id", referencedColumnName = "pk_id")
     private ScheduledVisit scheduledVisit;
 }

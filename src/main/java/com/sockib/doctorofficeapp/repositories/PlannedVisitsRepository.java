@@ -27,4 +27,8 @@ public interface PlannedVisitsRepository extends JpaRepository<PlannedVisit, Lon
     @Query("SELECT v FROM PlannedVisit v INNER JOIN v.registeredDoctor d WHERE d.username = :username AND v.day = :day")
     List<PlannedVisit> findPlannedVisitsByDoctorUsernameAndDate(String username, LocalDateTime day);
 
+    @Query("SELECT v FROM PlannedVisit v WHERE v.visitStatus.canceled = false " +
+            "AND v.visitStatus.wasMailSend = false AND v.day BETWEEN :beg AND :end")
+    List<PlannedVisit> findActivePlannedVisitsByInterval(LocalDateTime beg, LocalDateTime end);
+
 }

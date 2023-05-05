@@ -57,7 +57,9 @@ create table planned_visits(
     fk_scheduled_visit_id int,
 
     visit_day datetime not null,
-    cancelled bit default false,
+    canceled bit default false,
+    was_mail_send bit default false,
+    is_mail_scheduled bit default false,
 
     primary key (pk_id),
     foreign key (fk_registered_doctor_id) references registered_users(pk_id),
