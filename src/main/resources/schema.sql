@@ -42,8 +42,12 @@ create table scheduled_visits(
     beg_time time not null,
     end_time time not null,
     price int null,
-    localization varchar(60) not null,
     type varchar(60) not null,
+    country varchar(20) null,
+    city varchar(32) null,
+    street varchar(100) null,
+    zip_code varchar(16) null,
+
     disabled bit default false,
 
     primary key (pk_id),

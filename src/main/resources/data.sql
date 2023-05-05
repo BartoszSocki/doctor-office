@@ -10,10 +10,10 @@ values ( 20, 'CLIENT', 'bart@gmail.com', 'pass', 'bart', 'batrson' );
 insert into clients_info ( pk_id, registered_client_id, date_of_birth)
 values ( 100, 20, date '2002-01-01');
 
-insert into scheduled_visits (pk_id, fk_registered_doctor_id, day_of_the_week, beg_time, end_time, price, localization, type)
+insert into scheduled_visits (pk_id, fk_registered_doctor_id, day_of_the_week, beg_time, end_time, price, city, type)
 values ( 1000, 10, 'MON', time '16:00:00', time '17:00:00', 250, 'warszawa', 'wizyta kontrolna 1' );
 
-insert into scheduled_visits (pk_id, fk_registered_doctor_id, day_of_the_week, beg_time, end_time, price, localization, type)
+insert into scheduled_visits (pk_id, fk_registered_doctor_id, day_of_the_week, beg_time, end_time, price, city, type)
 values ( 2000, 10, 'TUE', time '12:00:00', time '13:00:00', 250, 'warszawa', 'wizyta kontrolna 2' );
 
 insert into planned_visits (pk_id, fk_registered_doctor_id, fk_registered_client_id, fk_scheduled_visit_id, visit_day)

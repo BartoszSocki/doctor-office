@@ -2,6 +2,7 @@ package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
+import com.sockib.doctorofficeapp.model.dto.AddressDto;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
 import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
@@ -43,7 +44,8 @@ class ScheduledVisitsServiceTests {
                 LocalTime.of(11, 0),
                 100,
                 "aaa",
-                "bbb"
+                "bbb",
+                new AddressDto()
         );
 
         when(registeredUserRepository.findRegisteredUserByUsername(any(String.class))).thenAnswer(

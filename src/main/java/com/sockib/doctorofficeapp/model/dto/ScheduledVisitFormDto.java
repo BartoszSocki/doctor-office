@@ -20,4 +20,10 @@ public class ScheduledVisitFormDto {
     private String localization;
     private String type;
 
+    private AddressDto address;
+//    private String country;
+//    private String city;
+//    private String street;
+//    private String zipCode;
+
 }

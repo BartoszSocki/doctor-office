@@ -1,6 +1,7 @@
 package com.sockib.doctorofficeapp.services;
 
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
+import com.sockib.doctorofficeapp.entities.embeded.Address;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import com.sockib.doctorofficeapp.exceptions.UnableToGetResourceException;
 import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
@@ -10,6 +11,8 @@ import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
 import jakarta.transaction.Transactional;
 import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.modelmapper.convention.MatchingStrategies;
+import org.modelmapper.spi.MatchingStrategy;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
@@ -55,7 +58,9 @@ public class ScheduledVisitsService {
 
 //         TODO needs validation
         scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
-        scheduledVisit.setLocalization(scheduledVisitFormDto.getLocalization());
+
+        var address = modelMapper.map(scheduledVisitFormDto, Address.class);
+        scheduledVisit.setAddress(address);
 
         return scheduledVisitRepository.save(scheduledVisit);
     }
@@ -65,10 +70,12 @@ public class ScheduledVisitsService {
                 .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var scheduledVisit = modelMapper.map(scheduledVisitFormDto, ScheduledVisit.class);
+        var address = modelMapper.map(scheduledVisitFormDto, Address.class);
 
 //         TODO needs validation
         scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
         scheduledVisit.setRegisteredDoctor(registeredDoctor);
+        scheduledVisit.setAddress(address);
 
         return scheduledVisitRepository.save(scheduledVisit);
     }

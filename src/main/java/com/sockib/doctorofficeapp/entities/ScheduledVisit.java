@@ -1,5 +1,6 @@
 package com.sockib.doctorofficeapp.entities;
 
+import com.sockib.doctorofficeapp.entities.embeded.Address;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import jakarta.persistence.*;
 import lombok.*;
@@ -28,7 +29,10 @@ public class ScheduledVisit {
     private LocalTime visitEndTime;
 
     private Integer price;
-    private String localization;
+
+    @Embedded
+    private Address address;
+
     private String type;
     private Boolean disabled;
 

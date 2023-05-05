@@ -16,8 +16,9 @@ public class ScheduledVisitDto extends RepresentationModel<ScheduledVisitDto> {
     private LocalTime visitBegTime;
     private LocalTime visitEndTime;
     private Integer price;
-    private String localization;
     private String type;
     private Long registeredDoctorId;
+
+    private AddressDto address;
 
 }
