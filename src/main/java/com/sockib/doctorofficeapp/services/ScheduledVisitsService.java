@@ -31,8 +31,7 @@ public class ScheduledVisitsService {
     }
 
     public List<ScheduledVisit> getEnabledScheduledVisits(Long doctorId) {
-//        return scheduledVisitRepository.findEnabledScheduledVisitsByDoctorId(doctorId);
-        return scheduledVisitRepository.findScheduledVisitsByRegisteredDoctorId(doctorId);
+        return scheduledVisitRepository.findEnabledScheduledVisitsByDoctorId(doctorId);
     }
 
     @Transactional

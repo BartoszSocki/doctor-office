@@ -34,9 +34,7 @@ public class NotesService {
         return notesRepository.findAllByDoctorUsername(username, pageable);
     }
 
-    public Note editNote(String username, Long noteId, Optional<NoteDataFormDto> optionalNoteDataFormDto) {
-        var noteDataFormDto = optionalNoteDataFormDto
-                .orElseThrow(() -> new UnableToGetResourceException("cannot locate note " + noteId + " for " + username));
+    public Note editNote(String username, Long noteId, NoteDataFormDto noteDataFormDto) {
         var note = getNote(username, noteId);
 
         note.setName(noteDataFormDto.getName());

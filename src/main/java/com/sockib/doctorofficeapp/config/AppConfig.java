@@ -23,6 +23,8 @@ import org.springframework.security.oauth2.jwt.*;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationConverter;
 import org.springframework.security.oauth2.server.resource.authentication.JwtGrantedAuthoritiesConverter;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
 
 import java.nio.charset.Charset;
 import java.nio.file.Files;
@@ -34,6 +36,7 @@ import java.security.interfaces.RSAPublicKey;
 import java.security.spec.PKCS8EncodedKeySpec;
 import java.security.spec.X509EncodedKeySpec;
 import java.time.Duration;
+import java.util.List;
 import java.util.UUID;
 
 @Configuration
@@ -52,6 +55,7 @@ public class AppConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain basicSecurity0(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.cors().disable();
         http.securityMatcher("/token", "/error", "/register/**");
         http.authorizeHttpRequests(a -> {
             a.requestMatchers("/token").permitAll();
@@ -67,6 +71,7 @@ public class AppConfig {
     @Bean
     public SecurityFilterChain basicSecurity1(HttpSecurity http) throws Exception {
         http.csrf().disable();
+        http.cors();
         http.authorizeHttpRequests(a -> {
             a.requestMatchers("/api/**").authenticated();
             a.anyRequest().authenticated();
@@ -76,6 +81,15 @@ public class AppConfig {
         http.oauth2ResourceServer(OAuth2ResourceServerConfigurer::jwt);
 
         return http.build();
+    }
+
+    @Bean
+    public CorsConfiguration corsConfiguration() {
+        var conf = new CorsConfiguration();
+        conf.setAllowCredentials(true);
+        conf.addAllowedOrigin("http://localhost:5173");
+        conf.setAllowedMethods(List.of("GET", "POST", "DELETE", "PUT", "PATCH"));
+        return conf;
     }
 
     @Bean

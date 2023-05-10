@@ -19,6 +19,12 @@ values ( 2000, 10, 'TUE', time '12:00:00', time '13:00:00', 250, 'warszawa', 'wi
 insert into planned_visits (pk_id, fk_registered_doctor_id, fk_registered_client_id, fk_scheduled_visit_id, visit_day)
 values ( 10000, 10, 20, 1000, timestamp '2023-05-05 14:48:00');
 
+insert into planned_visits (pk_id, fk_registered_doctor_id, fk_registered_client_id, fk_scheduled_visit_id, visit_day)
+values ( 20000, 10, 20, 1000, timestamp '2023-05-05 14:48:00');
+
+insert into planned_visits (pk_id, fk_registered_doctor_id, fk_registered_client_id, fk_scheduled_visit_id, visit_day)
+values ( 30000, 10, 20, 1000, timestamp '2023-05-05 14:48:00');
+
 insert into notes (pk_id, fk_registered_doctor_id, fk_planned_visit_id, name, content, date_of_creation, date_of_modification)
 values ( 100000, 10, 10000, 'notatka 1', 'super notatka', date '2023-01-01', date '2023-02-02');
 

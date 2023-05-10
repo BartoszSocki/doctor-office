@@ -19,12 +19,12 @@ import java.time.LocalDate;
 
 @AllArgsConstructor
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/api")
 public class PlannedVisitsController {
 
     private PlannedVisitsService plannedVisitsService;
-//    private ModelMapper modelMapper;
     private PagedResourcesAssembler<PlannedVisit> pagedResourcesAssembler;
     private ClientPlannedVisitModelAssembler clientPlannedVisitModelAssembler;
     private DoctorPlannedVisitModelAssembler doctorPlannedVisitModelAssembler;

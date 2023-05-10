@@ -9,7 +9,7 @@ import lombok.Data;
 @Embeddable
 public class VisitStatus {
 
-    private Boolean canceled;
+    private Boolean canceled = false;
 
     @Column(name = "was_mail_send")
     private Boolean wasMailSend = false;

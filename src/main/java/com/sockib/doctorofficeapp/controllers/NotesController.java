@@ -24,6 +24,7 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @AllArgsConstructor
 
+@CrossOrigin
 @PreAuthorize("hasRole('DOCTOR')")
 @RestController
 @RequestMapping(path = "/api/doctor/notes")
@@ -54,15 +55,16 @@ public class NotesController {
     @PutMapping(path = "/{noteId}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public ResponseEntity<NoteDataDto> editNote(@PathVariable Long noteId,
-                                                @RequestBody Optional<NoteDataFormDto> optionalNoteDataFormDto,
-                                                Principal principal) {
-        var note = notesService.editNote(principal.getName(), noteId, optionalNoteDataFormDto);
+                                                @RequestBody NoteDataFormDto noteDataFormDto) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        System.out.println(noteDataFormDto);
+        var note = notesService.editNote(authentication.getName(), noteId, noteDataFormDto);
         var noteDataDto = noteModelAssembler.toModel(note);
 
         return ResponseEntity.ok(noteDataDto);
     }
 
-    @PostMapping(path = "/plannedVisit/{plannedVisitId}")
+    @PostMapping(path = "/planned-visit/{plannedVisitId}")
     public ResponseEntity<NoteDataDto> createNote(@PathVariable Long plannedVisitId,
                                                   @RequestBody NoteDataFormDto noteDataFormDto, Principal principal) {
         var note = notesService.createNote(principal.getName(), plannedVisitId, noteDataFormDto);

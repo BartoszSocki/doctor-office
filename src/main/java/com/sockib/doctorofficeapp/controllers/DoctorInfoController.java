@@ -42,6 +42,8 @@ public class DoctorInfoController {
         return ResponseEntity.ok(doctorInfoDto);
     }
 
+
+
     @GetMapping(path = "/{doctorId}/info")
     public ResponseEntity<DoctorPublicInfoDto> publicDoctorInfo(@PathVariable Long doctorId) {
         var doctorInfo = doctorInfoService.getDoctorInfo(doctorId);

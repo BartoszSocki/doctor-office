@@ -1,26 +1,16 @@
 package com.sockib.doctorofficeapp.controllers;
 
-import com.nimbusds.jose.proc.SecurityContext;
-import com.sockib.doctorofficeapp.entities.Note;
-import com.sockib.doctorofficeapp.entities.ScheduledVisit;
-import com.sockib.doctorofficeapp.model.assemblers.NoteModelAssembler;
 import com.sockib.doctorofficeapp.model.assemblers.ScheduledVisitModelAssembler;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitDto;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.services.ScheduledVisitsService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.CollectionModel;
-import org.springframework.hateoas.IanaLinkRelations;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
-
-import java.security.Principal;
-import java.util.List;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
@@ -73,13 +63,12 @@ public class ScheduledVisitsController {
     }
 
     @GetMapping(path = "/{doctorId}/scheduled-visits")
-    public ResponseEntity<List<ScheduledVisit>> getVisits(@PathVariable Long doctorId) {
+    public ResponseEntity<CollectionModel<ScheduledVisitDto>> getVisits(@PathVariable Long doctorId) {
         var scheduledVisits = scheduledVisitsService.getEnabledScheduledVisits(doctorId);
-//        var scheduledVisitsDto = scheduledVisitModelAssembler.toCollectionModel(scheduledVisits);
-//        scheduledVisitsDto.add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(doctorId)).withSelfRel());
+        var scheduledVisitsDto = scheduledVisitModelAssembler.toCollectionModel(scheduledVisits);
+        scheduledVisitsDto.add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(doctorId)).withSelfRel());
 
-//        return ResponseEntity.ok(scheduledVisitsDto);
-        return ResponseEntity.ok(scheduledVisits);
+        return ResponseEntity.ok(scheduledVisitsDto);
     }
 
 }

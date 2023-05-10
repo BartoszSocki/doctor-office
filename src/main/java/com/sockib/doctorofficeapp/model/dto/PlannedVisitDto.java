@@ -6,6 +6,7 @@ import org.springframework.hateoas.RepresentationModel;
 import org.springframework.hateoas.server.core.Relation;
 
 import java.time.LocalDateTime;
+import java.time.LocalTime;
 
 @EqualsAndHashCode(callSuper = false)
 @Data
@@ -15,9 +16,19 @@ public class PlannedVisitDto extends RepresentationModel<PlannedVisitDto> {
 
     private Long id;
     private LocalDateTime day;
-    private boolean cancelled;
+    private LocalTime begTime;
+    private LocalTime endTime;
+    private Boolean cancelled;
+
     private Long registeredDoctorId;
     private Long registeredClientId;
-    private Long scheduledVisitId;
 
+    private String clientName;
+    private String clientSurname;
+
+    private String doctorName;
+    private String doctorSurname;
+
+    private String city;
+    private String street;
 }
