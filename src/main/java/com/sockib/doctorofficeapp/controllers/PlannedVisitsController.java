@@ -6,6 +6,7 @@ import com.sockib.doctorofficeapp.model.assemblers.DoctorPlannedVisitModelAssemb
 import com.sockib.doctorofficeapp.model.dto.PlannedVisitDto;
 import com.sockib.doctorofficeapp.services.PlannedVisitsService;
 import lombok.AllArgsConstructor;
+import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
@@ -16,6 +17,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
+import java.util.List;
 
 @AllArgsConstructor
 
@@ -28,6 +30,7 @@ public class PlannedVisitsController {
     private PagedResourcesAssembler<PlannedVisit> pagedResourcesAssembler;
     private ClientPlannedVisitModelAssembler clientPlannedVisitModelAssembler;
     private DoctorPlannedVisitModelAssembler doctorPlannedVisitModelAssembler;
+    private ModelMapper modelMapper;
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/client/planned-visits")
@@ -54,6 +57,16 @@ public class PlannedVisitsController {
     public ResponseEntity<PagedModel<PlannedVisitDto>> getDoctorPlannedVisits(Pageable pageable) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var plannedVisits = plannedVisitsService.getDoctorPlannedVisits(authentication.getName(), pageable);
+        var collectionModel = pagedResourcesAssembler.toModel(plannedVisits, doctorPlannedVisitModelAssembler);
+
+        return ResponseEntity.ok(collectionModel);
+    }
+
+    @PreAuthorize("hasRole('DOCTOR')")
+    @GetMapping(path = "/client/{clientId}/planned-visits")
+    public ResponseEntity<PagedModel<PlannedVisitDto>> getDoctorPlannedVisitsForClient(@PathVariable Long clientId, Pageable pageable) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var plannedVisits = plannedVisitsService.getDoctorPlannedVisitForClient(authentication.getName(), clientId, pageable);
         var collectionModel = pagedResourcesAssembler.toModel(plannedVisits, doctorPlannedVisitModelAssembler);
 
         return ResponseEntity.ok(collectionModel);

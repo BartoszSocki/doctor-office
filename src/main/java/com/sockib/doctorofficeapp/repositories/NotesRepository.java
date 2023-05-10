@@ -17,4 +17,8 @@ public interface NotesRepository extends JpaRepository<Note, Long> {
     @Query("SELECT n FROM Note n INNER JOIN n.registeredDoctor d WHERE d.username = :username AND n.id = :id")
     Optional<Note> findNoteByDoctorUsernameAndId(String username, Long id);
 
+    @Query("SELECT n FROM Note n INNER JOIN n.registeredDoctor d INNER JOIN n.plannedVisit p " +
+            "INNER JOIN p.registeredClient c WHERE d.username = :username AND c.id = :clientId")
+    Page<Note> getDoctorNotesForClientId(String username, Long clientId, Pageable pageable);
+
 }

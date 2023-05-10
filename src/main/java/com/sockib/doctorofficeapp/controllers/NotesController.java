@@ -6,7 +6,6 @@ import com.sockib.doctorofficeapp.model.dto.NoteDataDto;
 import com.sockib.doctorofficeapp.model.dto.NoteDataFormDto;
 import com.sockib.doctorofficeapp.services.NotesService;
 import lombok.AllArgsConstructor;
-import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PagedResourcesAssembler;
 import org.springframework.hateoas.PagedModel;
@@ -17,10 +16,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
-import java.util.Optional;
 
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
-import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @AllArgsConstructor
 
@@ -37,7 +34,16 @@ public class NotesController {
     @GetMapping
     public ResponseEntity<PagedModel<NoteDataDto>> getDoctorNotes(Pageable pageable) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
-        var page = notesService.getNotesByDoctorId(authentication.getName(), pageable);
+        var page = notesService.getNotesByDoctorUsername(authentication.getName(), pageable);
+        var collectionModel = pagedResourcesAssembler.toModel(page, noteModelAssembler);
+
+        return ResponseEntity.ok(collectionModel);
+    }
+
+    @GetMapping(path = "/client/{clientId}")
+    public ResponseEntity<PagedModel<NoteDataDto>> getDoctorNotesForClient(@PathVariable Long clientId, Pageable pageable) {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var page = notesService.getDoctorNotesForClientId(authentication.getName(), clientId, pageable);
         var collectionModel = pagedResourcesAssembler.toModel(page, noteModelAssembler);
 
         return ResponseEntity.ok(collectionModel);

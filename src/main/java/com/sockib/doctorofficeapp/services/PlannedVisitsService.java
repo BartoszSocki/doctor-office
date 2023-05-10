@@ -16,6 +16,7 @@ import org.springframework.stereotype.Service;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.List;
 
 @AllArgsConstructor
 
@@ -43,6 +44,10 @@ public class PlannedVisitsService {
         var registeredDoctor = registeredUserRepository.findRegisteredUserByUsername(username)
                 .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
         return plannedVisitsRepository.findPlannedVisitsByDoctorId(registeredDoctor.getId(), pageable);
+    }
+
+    public Page<PlannedVisit> getDoctorPlannedVisitForClient(String username, Long clientId, Pageable pageable) {
+        return plannedVisitsRepository.findDoctorPlannedVisitsByClientId(username, clientId, pageable);
     }
 
     public PlannedVisit getDoctorPlannedVisit(String username, Long visitId) {

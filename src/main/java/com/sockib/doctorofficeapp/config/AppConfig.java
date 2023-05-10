@@ -55,7 +55,7 @@ public class AppConfig {
     @Order(Ordered.HIGHEST_PRECEDENCE)
     public SecurityFilterChain basicSecurity0(HttpSecurity http) throws Exception {
         http.csrf().disable();
-        http.cors().disable();
+        http.cors();
         http.securityMatcher("/token", "/error", "/register/**");
         http.authorizeHttpRequests(a -> {
             a.requestMatchers("/token").permitAll();

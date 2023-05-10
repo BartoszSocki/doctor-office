@@ -13,8 +13,6 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
-
 @AllArgsConstructor
 
 @Service
@@ -30,8 +28,12 @@ public class NotesService {
                 .orElseThrow(() -> new UnableToGetResourceException("cannot locate note " + noteId + " for " + username));
     }
 
-    public Page<Note> getNotesByDoctorId(String username, Pageable pageable) {
+    public Page<Note> getNotesByDoctorUsername(String username, Pageable pageable) {
         return notesRepository.findAllByDoctorUsername(username, pageable);
+    }
+
+    public Page<Note> getDoctorNotesForClientId(String username, Long clientId, Pageable pageable) {
+        return notesRepository.getDoctorNotesForClientId(username, clientId, pageable);
     }
 
     public Note editNote(String username, Long noteId, NoteDataFormDto noteDataFormDto) {

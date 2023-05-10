@@ -1,6 +1,7 @@
 package com.sockib.doctorofficeapp.repositories;
 
 import com.sockib.doctorofficeapp.entities.PlannedVisit;
+import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -31,4 +32,11 @@ public interface PlannedVisitsRepository extends JpaRepository<PlannedVisit, Lon
             "AND v.visitStatus.wasMailSend = false AND v.day BETWEEN :beg AND :end")
     List<PlannedVisit> findActivePlannedVisitsByInterval(LocalDateTime beg, LocalDateTime end);
 
+    @Query("SELECT DISTINCT v.registeredClient FROM PlannedVisit v " +
+            "INNER JOIN v.registeredDoctor d WHERE d.username = :username")
+    List<RegisteredUser> findDoctorClients(String username);
+
+    @Query("SELECT v FROM PlannedVisit v INNER JOIN v.registeredClient c INNER JOIN v.registeredDoctor d " +
+            "WHERE c.id = :clientId AND d.username = :username")
+    Page<PlannedVisit> findDoctorPlannedVisitsByClientId(String username, Long clientId, Pageable pageable);
 }

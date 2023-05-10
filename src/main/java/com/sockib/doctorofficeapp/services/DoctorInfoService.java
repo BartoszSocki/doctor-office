@@ -1,14 +1,15 @@
 package com.sockib.doctorofficeapp.services;
 
-import com.sockib.doctorofficeapp.entities.ClientInfo;
 import com.sockib.doctorofficeapp.entities.DoctorInfo;
+import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
-import com.sockib.doctorofficeapp.repositories.ClientInfoRepository;
 import com.sockib.doctorofficeapp.repositories.DoctorInfoRepository;
+import com.sockib.doctorofficeapp.repositories.PlannedVisitsRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Slf4j
 @AllArgsConstructor
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 public class DoctorInfoService {
 
     private DoctorInfoRepository doctorInfoRepository;
+    private PlannedVisitsRepository plannedVisitsRepository;
 
     public DoctorInfo getDoctorInfo(String username) {
         log.trace("getting doctor info by username: " + username);
@@ -30,6 +32,10 @@ public class DoctorInfoService {
 
         return doctorInfoRepository.findDoctorInfoById(id)
                 .orElseThrow(() -> new UserNotFoundException("id: " + id));
+    }
+
+    public List<RegisteredUser> getDoctorClients(String username) {
+        return plannedVisitsRepository.findDoctorClients(username);
     }
 
 }
