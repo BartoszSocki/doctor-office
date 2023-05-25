@@ -30,7 +30,6 @@ public class PlannedVisitsController {
     private PagedResourcesAssembler<PlannedVisit> pagedResourcesAssembler;
     private ClientPlannedVisitModelAssembler clientPlannedVisitModelAssembler;
     private DoctorPlannedVisitModelAssembler doctorPlannedVisitModelAssembler;
-    private ModelMapper modelMapper;
 
     @PreAuthorize("hasRole('CLIENT')")
     @GetMapping(path = "/client/planned-visits")

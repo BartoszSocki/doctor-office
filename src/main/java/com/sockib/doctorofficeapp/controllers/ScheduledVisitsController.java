@@ -1,6 +1,7 @@
 package com.sockib.doctorofficeapp.controllers;
 
-import com.sockib.doctorofficeapp.model.assemblers.ScheduledVisitModelAssembler;
+import com.sockib.doctorofficeapp.model.assemblers.ClientScheduledVisitModelAssembler;
+import com.sockib.doctorofficeapp.model.assemblers.DoctorScheduledVisitModelAssembler;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitDto;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
 import com.sockib.doctorofficeapp.services.ScheduledVisitsService;
@@ -17,18 +18,20 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @AllArgsConstructor
 
+@CrossOrigin
 @RestController
 @RequestMapping(path = "/api/doctor")
 public class ScheduledVisitsController {
 
     private ScheduledVisitsService scheduledVisitsService;
-    private ScheduledVisitModelAssembler scheduledVisitModelAssembler;
+    private ClientScheduledVisitModelAssembler clientScheduledVisitModelAssembler;
+    private DoctorScheduledVisitModelAssembler doctorScheduledVisitModelAssembler;
 
     @PreAuthorize("hasRole('DOCTOR')")
     @GetMapping(path = "/scheduled-visits/{visitId}")
     public ResponseEntity<ScheduledVisitDto> getVisit(@PathVariable Long visitId) {
         var scheduledVisit = scheduledVisitsService.getScheduledVisit(visitId);
-        var scheduledVisitDto = scheduledVisitModelAssembler.toModel(scheduledVisit);
+        var scheduledVisitDto = clientScheduledVisitModelAssembler.toModel(scheduledVisit);
 
         return ResponseEntity.ok(scheduledVisitDto);
     }
@@ -38,16 +41,28 @@ public class ScheduledVisitsController {
     public ResponseEntity<ScheduledVisitDto> addVisit(@RequestBody ScheduledVisitFormDto scheduledVisitFormDto) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var scheduledVisit = scheduledVisitsService.createScheduledVisit(scheduledVisitFormDto, authentication.getName());
-        var scheduledVisitDto = scheduledVisitModelAssembler.toModel(scheduledVisit);
+        var scheduledVisitDto = clientScheduledVisitModelAssembler.toModel(scheduledVisit);
 
         return ResponseEntity.status(HttpStatus.CREATED).body(scheduledVisitDto);
     }
 
     @PreAuthorize("hasRole('DOCTOR')")
+    @GetMapping(path = "/scheduled-visits")
+    public ResponseEntity<CollectionModel<ScheduledVisitDto>> getVisits() {
+        var authentication = SecurityContextHolder.getContext().getAuthentication();
+        var scheduledVisits = scheduledVisitsService.getEnabledScheduledVisitsByDoctorUsername(authentication.getName());
+        var scheduledVisitsDto = doctorScheduledVisitModelAssembler.toCollectionModel(scheduledVisits);
+
+        return ResponseEntity.ok(scheduledVisitsDto);
+    }
+
+    @PreAuthorize("hasRole('DOCTOR')")
     @DeleteMapping(path = "/scheduled-visits/{visitId}")
-    public void removeVisit(@PathVariable Long visitId) {
+    public ResponseEntity<?> removeVisit(@PathVariable Long visitId) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         scheduledVisitsService.disableScheduledVisit(visitId, authentication.getName());
+
+        return ResponseEntity.noContent().build();
     }
 
 //     TODO test it
@@ -57,16 +72,16 @@ public class ScheduledVisitsController {
                                                          @RequestBody ScheduledVisitFormDto scheduledVisitFormDto) {
         var authentication = SecurityContextHolder.getContext().getAuthentication();
         var scheduledVisit = scheduledVisitsService.updateScheduledVisit(scheduledVisitFormDto, visitId, authentication.getName());
-        var scheduledVisitDto = scheduledVisitModelAssembler.toModel(scheduledVisit);
+        var scheduledVisitDto = clientScheduledVisitModelAssembler.toModel(scheduledVisit);
 
         return ResponseEntity.ok(scheduledVisitDto);
     }
 
     @GetMapping(path = "/{doctorId}/scheduled-visits")
-    public ResponseEntity<CollectionModel<ScheduledVisitDto>> getVisits(@PathVariable Long doctorId) {
-        var scheduledVisits = scheduledVisitsService.getEnabledScheduledVisits(doctorId);
-        var scheduledVisitsDto = scheduledVisitModelAssembler.toCollectionModel(scheduledVisits);
-        scheduledVisitsDto.add(linkTo(methodOn(ScheduledVisitsController.class).getVisits(doctorId)).withSelfRel());
+    public ResponseEntity<CollectionModel<ScheduledVisitDto>> getDoctorVisits(@PathVariable Long doctorId) {
+        var scheduledVisits = scheduledVisitsService.getEnabledScheduledVisitsForDoctorId(doctorId);
+        var scheduledVisitsDto = clientScheduledVisitModelAssembler.toCollectionModel(scheduledVisits);
+        scheduledVisitsDto.add(linkTo(methodOn(ScheduledVisitsController.class).getDoctorVisits(doctorId)).withSelfRel());
 
         return ResponseEntity.ok(scheduledVisitsDto);
     }

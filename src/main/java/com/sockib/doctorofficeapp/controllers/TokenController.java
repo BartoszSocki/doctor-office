@@ -7,6 +7,7 @@ import com.sockib.doctorofficeapp.services.TokenService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
 @AllArgsConstructor
@@ -17,14 +18,20 @@ import org.springframework.web.bind.annotation.*;
 public class TokenController {
 
     private TokenService jwtService;
+    private PasswordEncoder passwordEncoder;
     private RegisteredUserDetailsService registeredUserDetailsService;
 
     @PostMapping
     public ResponseEntity<TokenDto> login(@Valid @RequestBody RegisteredUserLoginDataDto registeredUserLoginDataDto) {
         var username = registeredUserLoginDataDto.getUsername();
-        var registerUser = registeredUserDetailsService.loadUserByUsername(username);
+        var password = registeredUserLoginDataDto.getPassword();
+        var registeredUser = registeredUserDetailsService.loadUserByUsername(username);
 
-        var token = jwtService.issueToken(registerUser);
+        if (!registeredUser.getPassword().equals(password)) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        var token = jwtService.issueToken(registeredUser);
         var tokenDto = new TokenDto();
         tokenDto.setToken(token);
 

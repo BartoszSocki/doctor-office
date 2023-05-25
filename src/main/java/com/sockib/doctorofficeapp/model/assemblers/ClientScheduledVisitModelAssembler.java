@@ -1,10 +1,7 @@
 package com.sockib.doctorofficeapp.model.assemblers;
 
-import com.sockib.doctorofficeapp.controllers.NotesController;
 import com.sockib.doctorofficeapp.controllers.ScheduledVisitsController;
-import com.sockib.doctorofficeapp.entities.Note;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
-import com.sockib.doctorofficeapp.model.dto.NoteDataDto;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitDto;
 import org.modelmapper.ModelMapper;
 import org.springframework.hateoas.CollectionModel;
@@ -15,11 +12,11 @@ import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.linkTo;
 import static org.springframework.hateoas.server.mvc.WebMvcLinkBuilder.methodOn;
 
 @Component
-public class ScheduledVisitModelAssembler extends RepresentationModelAssemblerSupport<ScheduledVisit, ScheduledVisitDto> {
+public class ClientScheduledVisitModelAssembler extends RepresentationModelAssemblerSupport<ScheduledVisit, ScheduledVisitDto> {
 
     private final ModelMapper modelMapper;
 
-    public ScheduledVisitModelAssembler(ModelMapper modelMapper) {
+    public ClientScheduledVisitModelAssembler(ModelMapper modelMapper) {
         super(ScheduledVisitsController.class, ScheduledVisitDto.class);
         this.modelMapper = modelMapper;
     }

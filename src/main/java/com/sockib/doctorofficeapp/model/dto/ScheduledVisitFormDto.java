@@ -1,5 +1,6 @@
 package com.sockib.doctorofficeapp.model.dto;
 
+import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

@@ -1,8 +1,10 @@
 package com.sockib.doctorofficeapp.services;
 
+import com.sockib.doctorofficeapp.entities.RegisteredUser;
 import com.sockib.doctorofficeapp.entities.ScheduledVisit;
 import com.sockib.doctorofficeapp.entities.embeded.Address;
 import com.sockib.doctorofficeapp.enums.DayOfTheWeek;
+import com.sockib.doctorofficeapp.exceptions.ScheduledVisitCollisionException;
 import com.sockib.doctorofficeapp.exceptions.UnableToGetResourceException;
 import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
@@ -30,8 +32,12 @@ public class ScheduledVisitsService {
                 .orElseThrow(() -> new UnableToGetResourceException("cannot locate scheduledVisit " + visitId));
     }
 
-    public List<ScheduledVisit> getEnabledScheduledVisits(Long doctorId) {
+    public List<ScheduledVisit> getEnabledScheduledVisitsForDoctorId(Long doctorId) {
         return scheduledVisitRepository.findEnabledScheduledVisitsByDoctorId(doctorId);
+    }
+
+    public List<ScheduledVisit> getEnabledScheduledVisitsByDoctorUsername(String username) {
+        return scheduledVisitRepository.findEnabledScheduledVisitsByDoctorUsername(username);
     }
 
     @Transactional
@@ -54,7 +60,7 @@ public class ScheduledVisitsService {
         scheduledVisit.setPrice(scheduledVisitFormDto.getPrice());
 
 //         TODO needs validation
-        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
+//        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
 
         var address = modelMapper.map(scheduledVisitFormDto, Address.class);
         scheduledVisit.setAddress(address);
@@ -67,14 +73,22 @@ public class ScheduledVisitsService {
                 .orElseThrow(() -> new UserNotFoundException("user " + username + " not found"));
 
         var scheduledVisit = modelMapper.map(scheduledVisitFormDto, ScheduledVisit.class);
-        //var address = modelMapper.map(scheduledVisitFormDto, Address.class);
+        if (isColliding(scheduledVisit, registeredDoctor)) {
+            throw new ScheduledVisitCollisionException("time window " + scheduledVisit.getVisitBegTime() + " - " + scheduledVisit.getVisitEndTime() + "is colliding with another visit");
+        }
 
 //         TODO needs validation
-//        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
         scheduledVisit.setRegisteredDoctor(registeredDoctor);
-        //scheduledVisit.setAddress(address);
+//        scheduledVisit.setDayOfTheWeek(DayOfTheWeek.valueOf(scheduledVisitFormDto.getDayOfTheWeek()));
 
         return scheduledVisitRepository.save(scheduledVisit);
     }
 
+    private boolean isColliding(ScheduledVisit scheduledVisit, RegisteredUser registeredDoctor) {
+        var beg = scheduledVisit.getVisitBegTime();
+        var end = scheduledVisit.getVisitEndTime();
+        var day = scheduledVisit.getDayOfTheWeek();
+        var visits = scheduledVisitRepository.findByTimeIntervalAndDoctorUsername(registeredDoctor.getUsername(), beg, end, day);
+        return !visits.isEmpty();
+    }
 }
