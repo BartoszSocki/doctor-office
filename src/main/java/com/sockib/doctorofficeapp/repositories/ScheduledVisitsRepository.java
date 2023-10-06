@@ -33,5 +33,4 @@ public interface ScheduledVisitsRepository extends JpaRepository<ScheduledVisit,
             "AND (:beg <= v.visitBegTime AND v.visitBegTime <= :end) " +
             "OR (:beg <= v.visitEndTime AND v.visitEndTime <= :end)")
     List<ScheduledVisit> findByTimeIntervalAndDoctorUsername(String username, LocalTime beg, LocalTime end, DayOfTheWeek day);
-
 }

@@ -8,6 +8,7 @@ import com.sockib.doctorofficeapp.exceptions.ScheduledVisitCollisionException;
 import com.sockib.doctorofficeapp.exceptions.UnableToGetResourceException;
 import com.sockib.doctorofficeapp.exceptions.UserNotFoundException;
 import com.sockib.doctorofficeapp.model.dto.ScheduledVisitFormDto;
+import com.sockib.doctorofficeapp.repositories.PlannedVisitsRepository;
 import com.sockib.doctorofficeapp.repositories.RegisteredUserRepository;
 import com.sockib.doctorofficeapp.repositories.ScheduledVisitsRepository;
 import jakarta.transaction.Transactional;
@@ -15,6 +16,12 @@ import lombok.AllArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Service;
 
+import java.time.DayOfWeek;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
+import java.time.temporal.TemporalAdjuster;
+import java.time.temporal.TemporalAdjusters;
 import java.util.List;
 
 @AllArgsConstructor
@@ -24,12 +31,23 @@ public class ScheduledVisitsService {
 
     private RegisteredUserRepository registeredUserRepository;
     private ScheduledVisitsRepository scheduledVisitRepository;
+    private PlannedVisitsRepository plannedVisitsRepository;
 
     private ModelMapper modelMapper;
 
     public ScheduledVisit getScheduledVisit(Long visitId) {
         return scheduledVisitRepository.findById(visitId)
                 .orElseThrow(() -> new UnableToGetResourceException("cannot locate scheduledVisit " + visitId));
+    }
+
+    public List<ScheduledVisit> getEnabledScheduledVisitsForDoctorIdAndWeek(Long doctorId, LocalDate day) {
+        var monday = LocalDateTime.of(day.with(DayOfWeek.MONDAY), LocalTime.MIN);
+        var sunday = LocalDateTime.of(day.with(DayOfWeek.SUNDAY), LocalTime.MAX);
+        var scheduledVisits = scheduledVisitRepository.findEnabledScheduledVisitsByDoctorId(doctorId);
+        var plannedVisits = plannedVisitsRepository.findDoctorActivePlannedVisitsByInterval(doctorId, monday, sunday);
+
+        var ids = plannedVisits.stream().map((v) -> v.getScheduledVisit().getId()).toList();
+        return scheduledVisits.stream().filter((v) -> !ids.contains(v.getId())).toList();
     }
 
     public List<ScheduledVisit> getEnabledScheduledVisitsForDoctorId(Long doctorId) {

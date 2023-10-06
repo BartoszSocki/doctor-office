@@ -7,6 +7,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
@@ -29,8 +30,14 @@ public interface PlannedVisitsRepository extends JpaRepository<PlannedVisit, Lon
     List<PlannedVisit> findPlannedVisitsByDoctorUsernameAndDate(String username, LocalDateTime day);
 
     @Query("SELECT v FROM PlannedVisit v WHERE v.visitStatus.canceled = false " +
-            "AND v.visitStatus.wasMailSend = false AND v.day BETWEEN :beg AND :end")
+            "AND v.visitStatus.canceled = false AND v.day BETWEEN :beg AND :end")
     List<PlannedVisit> findActivePlannedVisitsByInterval(LocalDateTime beg, LocalDateTime end);
+
+    @Query("SELECT v FROM PlannedVisit v INNER JOIN v.registeredDoctor d " +
+            "WHERE v.visitStatus.canceled = false " +
+            "AND d.id = :doctorId " +
+            "AND v.visitStatus.canceled = false AND v.day BETWEEN :beg AND :end")
+    List<PlannedVisit> findDoctorActivePlannedVisitsByInterval(Long doctorId, LocalDateTime beg, LocalDateTime end);
 
     @Query("SELECT DISTINCT v.registeredClient FROM PlannedVisit v " +
             "INNER JOIN v.registeredDoctor d WHERE d.username = :username")

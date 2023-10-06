@@ -21,7 +21,7 @@ public class PlannedVisit {
     private LocalDateTime day;
 
     @Embedded
-    private VisitStatus visitStatus;
+    private VisitStatus visitStatus = new VisitStatus();
 
     @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "fk_registered_doctor_id", referencedColumnName = "pk_id")
